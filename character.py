@@ -1,3 +1,5 @@
+from libraries import race_list, background_list
+
 class Character():
     def __init__(self, name, race, background, alignment, age, character_class, character_subclass, level, str, dex, con, int, wis, cha, max_hp):
         self._name = name
@@ -16,11 +18,22 @@ class Character():
         self._cha = cha
         self._max_hp = max_hp
 
-    def set_race():
-        pass
+    def set_name(self):
+        self._name = input("Please enter your character's name: ")
 
-    def set_background():
-        pass
+    def set_race(self):
+        print(f"Please select {self._name}'s race from the following: ")
+        for i in range(0, len(race_list)):
+            print(f"{i+1}. {race_list[i]}")
+        race_index = int(input())
+        self._race = race_list[race_index-1]
+
+    def set_background(self):
+        print(f"Please select {self._name}'s background from the following:")
+        for i in range(0, len(background_list)):
+            print(f"{i+1}. {background_list[i]}")
+        background_index = int(input()) - 1
+        self._background = background_list[background_index]
 
     def set_alignment():
         pass
