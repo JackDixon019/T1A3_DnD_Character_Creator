@@ -1,5 +1,8 @@
 from libraries import race_list, background_list
 
+class LevelOutOfBounds(Exception):
+    pass
+
 class Character():
     def __init__(self, name, race, background, alignment, age, character_class, character_subclass, level, str, dex, con, int, wis, cha, max_hp):
         self._name = name
@@ -35,25 +38,28 @@ class Character():
         background_index = int(input()) - 1
         self._background = background_list[background_index]
 
-    def set_alignment():
+    def set_alignment(self):
+        self._alignment = input(f"Please enter {self._name}'s alignment (e.g. Lawful Good): ")
+
+    def set_age(self):
+        self._age = input(f"Please enter {self._name}'s age: ")
+
+    def set_level(self):
+        level = int(input(f"Please enter {self._name}'s level between 1 and 20: "))
+        if 1 > level  or level > 20:
+            raise LevelOutOfBounds("Please enter a level between 1 and 20")
+        self._level = level
+
+    def set_character_class(self):
         pass
 
-    def set_age():
+    def set_character_subclass(self):
         pass
 
-    def set_character_class():
+    def set_stats(self):
         pass
 
-    def set_character_subclass():
-        pass
-
-    def set_level():
-        pass
-
-    def set_stats():
-        pass
-
-    def set_max_hp():
+    def set_max_hp(self):
         pass
 
     def get_character(self):
