@@ -3,20 +3,20 @@ race_list = ["Human", "Elf", "Orc", "Gnome"]
 background_list = ["Noble", "Beggar", "Wild Child", "Monk"]
 
 
-class_dictionary = {
-    0: "Barbarian",
-    1: "Bard",
-    2: "Cleric",
-    3: "Druid",
-    4: "Fighter",
-    5: "Monk",
-    6: "Paladin",
-    7: "Ranger",
-    8: "Rogue",
-    9: "Sorcerer",
-    10: "Warlock",
-    11: "Wizard"
-    }
+class_list = [
+    "Barbarian",
+    "Bard",
+    "Cleric",
+    "Druid",
+    "Fighter",
+    "Monk",
+    "Paladin",
+    "Ranger",
+    "Rogue",
+    "Sorcerer",
+    "Warlock",
+    "Wizard"
+]
 
 subclass_dictionary = {
     "Barbarian": ["Path of the Berserker", "Path of the Totem Warrior"],
