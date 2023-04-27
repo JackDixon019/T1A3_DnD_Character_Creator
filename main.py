@@ -1,5 +1,5 @@
 
-from character import Character, LevelOutOfBounds
+from character import Character, LevelOutOfBounds, TheBackrooms
 from functions import create_character
 
 print("Welcome to The Tavern! \n What would you like to do here?")
@@ -35,6 +35,9 @@ except ValueError:
 
 except LevelOutOfBounds as e:
     print("Please enter a level between 1 and 20")
+
+except TheBackrooms as e:
+    print("How did you even get here?")
 
 except Exception as e:
     print(e)
