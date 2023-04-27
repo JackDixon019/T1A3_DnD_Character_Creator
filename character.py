@@ -1,4 +1,4 @@
-from libraries import race_list, background_list
+from libraries import race_list, background_list, class_dictionary, subclass_dictionary, level_one_subclasses, level_two_subclasses
 
 class LevelOutOfBounds(Exception):
     pass
@@ -51,10 +51,23 @@ class Character():
         self._level = level
 
     def set_character_class(self):
-        pass
+        print(f"Please select {self._name}'s class from the following:")
+        for i in range(0, len(class_dictionary)):
+            print(f"{i+1}. {class_dictionary[i]}")
+        class_index = int(input()) - 1
+        self._character_class = class_dictionary[class_index]
 
     def set_character_subclass(self):
-        pass
+        has_subclass = self._level >= 3 or self._character_class in level_one_subclasses or (self._level >= 2 and self._character_class in level_two_subclasses)
+        
+        if has_subclass == True:
+            print(f"Please select {self._name}'s subclass from the following:")
+            for i in range(0, len(subclass_dictionary[self._character_class])):
+                print(f"{i+1}. {subclass_dictionary[self._character_class][i]}")
+            character_subclass = int(input()) - 1
+            self._character_subclass = subclass_dictionary[self._character_class][character_subclass]
+        else:
+            print("Your character does not yet have a subclass unlocked.")
 
     def set_stats(self):
         pass
