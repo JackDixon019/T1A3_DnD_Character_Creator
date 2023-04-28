@@ -28,16 +28,45 @@ try:
                 print("Delete Character")
             case "5":
                 print("Roll Dice")
-                die_count = int(input("How many die would you like to roll?"))
-                die_type = int(input("How many sides does the dice have?"))
-                advantage = int(input("Do you have advantage?\n1. No\n2. I have advantage\n3. I have disadvantage :(\n"))
-                match advantage:
-                    case 1:
-                        advantage = 0
-                    case 2:
-                        advantage = 1
-                    case 3:
-                        advantage = -1
+                while True:
+                    try:
+                        die_count = int(input("How many die would you like to roll? "))
+                        break
+                    except ValueError:
+                        print("Error, please enter a number\n")
+                        continue
+                while True:
+                    try:
+                        die_type = int(input("How many sides does the dice have? "))
+                        break
+                    except ValueError:
+                        print("Error, please enter a number\n")
+                        continue
+
+                
+                while True:
+                    try:
+                        # Advantage is only used in cases of rolling 2d20
+                        if die_count == 2 and die_type == 20:
+                            advantage = int(input("Do you have advantage?\n1. No\n2. I have advantage\n3. I have disadvantage :(\n"))
+                            match advantage:
+                                case 1:
+                                    advantage = 0
+                                    break
+                                case 2:
+                                    advantage = 1
+                                    break
+                                case 3:
+                                    advantage = -1
+                                    break
+                                case _:
+                                    "Please enter either 1, 2, or 3"
+                        else:
+                            advantage = 0
+                            break
+                    except ValueError:
+                        print("Error, please enter a number\n")
+                        continue
                 print(roll_die(die_count, die_type, advantage)) 
             case "6":
                 print("Program now exiting")
@@ -47,7 +76,7 @@ try:
                 pass
 
 except ValueError:
-    print("Error, please enter a number from the list")
+    print("Error, please enter a number\n")
 
 except LevelOutOfBounds as e:
     print("Please enter a level between 1 and 20")
