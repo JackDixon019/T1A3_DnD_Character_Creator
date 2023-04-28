@@ -1,4 +1,6 @@
-from selectors import DefaultSelector
+
+from random import randint
+from functions import assign_score_to_stat, roll_die
 from libraries import race_list, background_list, class_list, subclass_dictionary, level_one_subclasses, level_two_subclasses, stat_options, default_stats
 
 # Custom error for players entering too low or high of a level
@@ -32,18 +34,23 @@ class Character():
 
     # Sets the character's race from the race library
     def set_race(self):
-        print(f"\nPlease select {self._name}'s race from the following: ")
-        # Lists available options
-        for i in range(0, len(race_list)):
-            print(f"{i+1}. {race_list[i]}")
-        race_index = int(input()) - 1
+        while True:
+            print(f"\nPlease select {self._name}'s race from the following: ")
+            # Lists available options
+            for i in range(0, len(race_list)):
+                print(f"{i+1}. {race_list[i]}")
+            race_index = int(input()) - 1
+            if 0 <= race_index < len(race_list):
+                break
+            else:
+                print("That option is out of bounds. Please select from the options provided")
         self._race = race_list[race_index]
 
     # Sets the character's background from the backgrounds library
     def set_background(self):
         print(f"\nPlease select {self._name}'s background from the following:")
         # Lists available options
-        for i in range(0, len(background_list)):
+        for i in range(len(background_list)):
             print(f"{i+1}. {background_list[i]}")
         background_index = int(input("\n")) - 1
         self._background = background_list[background_index]
@@ -97,71 +104,137 @@ class Character():
         for i in range(len(stat_options)):
             print(f"{i+1} {stat_options[i]}")
         method = int(input())
-        match method:
-            case 1:
-                # In point-buy, the player's stats start at 8. The player then has 27 points total to spend across all 6 stats.
-                # No one stat can exceed 15 points in this way
-                total = 0
-                retry = "y"
-                # Allows player to reallocate if needed
-                while retry == "y":
-                    # Checks total points allocated meets the limit
-                    if total < 27:
-                        print(f"\nYou have {27-total} points remaining to allocate between each stat")
-                        print("Each stat can have a maximum of 15 before bonuses are applied.")
-                        print(f"Currently, {self._name}'s stats are:")
-                        # lists each stat and value in the default_stats dicionary
-                        for stat in default_stats:
-                            print(f"{stat}: {default_stats[stat]}")
-                        stat_choice = input("\nWhich stat would you like to allocate points to?\n").upper()
-                        # Checks the stat chosen is less than 15
-                        if default_stats[stat_choice] < 15:
-                            # Gets the number of points the user wants to add
-                            point_allocation = int(input(f"{stat_choice} has {min(15 - default_stats[stat_choice], 27-total)} available points remaining.\nHow many would you like to add?\n"))
-                            # Checks the user's desired addition is legal (<15 total)
-                            if point_allocation <= 15 - default_stats[stat_choice]:
-                                # Adds additional points to stat and to total points tally
-                                default_stats[stat_choice] += point_allocation
-                                total += point_allocation
-                            else:
-                                print("Sorry, that's too many points for one stat. The maximum is 15\n")
+        while True:
+            match method:
+                # User has selected "point-buy"
+                case 1:
+                    # In point-buy, the player's stats start at 8. The player then has 27 points total to spend across all 6 stats.
+                    # No one stat can exceed 15 points in this way
+                    total = 0
+                    # Allows player to reallocate if needed
+                    while True:
+                        # Checks total points allocated meets the limit
+                        if total < 27:
+                            print(f"\nYou have {27-total} points remaining to allocate between each stat")
+                            print("Each stat can have a maximum of 15 before bonuses are applied.")
+                            print(f"Currently, {self._name}'s stats are:")
+                            # lists each stat and value in the default_stats dicionary
+                            for stat in default_stats:
+                                print(f"{stat}: {default_stats[stat]}")
+                            stat_choice = input("\nWhich stat would you like to allocate points to?\n").upper()
+
+                            match stat_choice in list(default_stats):
+                                case True:
+                                    # Checks the stat chosen is less than 15
+                                    if default_stats[stat_choice] < 15:
+                                        # Gets the number of points the user wants to add
+                                        point_allocation = int(input(f"{stat_choice} has {min(15 - default_stats[stat_choice], 27-total)} available points remaining.\nHow many would you like to add?\n"))
+                                        # Checks the user's desired addition is legal (<15 total)
+                                        if point_allocation <= 15 - default_stats[stat_choice]:
+                                            # Adds additional points to stat and to total points tally
+                                            default_stats[stat_choice] += point_allocation
+                                            total += point_allocation
+                                        else:
+                                            print("\n\nSorry, that's too many points for one stat. The maximum is 15\n")
+                                    else:
+                                        print("\n\nSorry, that stat is already at the maximum. Please select another.")
+                                case _:
+                                    print("\n\nPlease enter an available stat")
+
+
+                        # If the total points are >27:
+                        elif total > 27:
+                            print(f"\nSorry, {total} is too many points total.")
+                            # Subtracts last points allocation from the most recent score + total points tally
+                            default_stats[stat_choice] -= point_allocation
+                            total -= point_allocation
+
+                        # Prints character's current stats, and then offers the choice to reallocate them.
+                        elif total == 27:
+                            print(f"\n {self._name}'s stats are currently:")
+                            for stat in default_stats:
+                                print(f"{stat}: {default_stats[stat]}")
+                            while True:
+                                retry_status = input("\nAre you happy with this stat distribution?\n1. Yes, please save these stats.\n2. No, I'd like to try again.\n")
+                                # If the user chooses not to reallocate, saves the values to the Character object
+                                if retry_status == "1":
+                                    self._str = default_stats["STR"]
+                                    self._dex = default_stats["DEX"]
+                                    self._con = default_stats["CON"]
+                                    self._int = default_stats["INT"]
+                                    self._wis = default_stats["WIS"]
+                                    self._cha = default_stats["CHA"]
+                                    return
+                                # If the user chooses to reallocate, resets default values to 8 and total to 0
+                                elif retry_status == "2": 
+                                    for i in default_stats:
+                                        default_stats[i] = 8
+                                    total = 0
+                                    break
+                                else: 
+                                    print("\n\nPlease select from either option 1 or option 2")
+
+                        # Catches errors in case I did my math wrong somewhere lol
                         else:
-                            print("Sorry, that stat is already at the maximum. Please select another.")
+                            raise TheBackrooms("How did you even get here?")
+                        
+                # User has selected roll "4d6 pick 3"
+                # In this case, we will simulate rolling 4 6-sided die and take the sum of the highest 3 rolls
+                case 2:
+                    available_scores = []
+                    # For each stat
+                    for x in range(6):
+                        # Rolls (4, 6-sided die, with "advantage") --> "advantage" removes lowest number from list of values
+                        rolls = roll_die(4,6,1)
+                        # Adds sum of rolls to available scores list
+                        available_scores.append(rolls)
+                    # Sorts in descending order
+                    available_scores.sort(reverse=True)
+                        
+                    # Function assigns scores to stats
+                    new_stats = assign_score_to_stat(available_scores)
 
-                    # If the total points are >27:
-                    elif total > 27:
-                        print(f"\nSorry, {total} is too many points total.")
-                        # Subtracts last points allocation from the most recent score + total points tally
-                        default_stats[stat_choice] -= point_allocation
-                        total -= point_allocation
+                    print(f"\n {self._name}'s stats are:")
+                    for stat in new_stats:
+                        print(f"{stat}: {new_stats[stat]}")
+                    self._str = new_stats["STR"]
+                    self._dex = new_stats["DEX"]
+                    self._con = new_stats["CON"]
+                    self._int = new_stats["INT"]
+                    self._wis = new_stats["WIS"]
+                    self._cha = new_stats["CHA"]
+                    return
 
-                    # Prints character's current stats, and then offers the choice to reallocate them.
-                    elif total == 27:
-                        print(f"\n {self._name}'s stats are currently:")
-                        for stat in default_stats:
-                            print(f"{stat}: {default_stats[stat]}")
-                        retry = input("\nWould you like to reallocate these stats? y/n \n").lower()
-                        # If the user chooses not to reallocate, saves the values to the Character object
-                        if retry != "y":
-                            self._str = default_stats["STR"]
-                            self._dex = default_stats["DEX"]
-                            self._con = default_stats["CON"]
-                            self._int = default_stats["INT"]
-                            self._wis = default_stats["WIS"]
-                            self._cha = default_stats["CHA"]
-                            return
-                        # If the user chooses to rellocate, resets default values to 8 and total to 0
-                        else: 
-                            for i in default_stats:
-                                default_stats[i] = 8
-                            total = 0
-                    # Catches errors in case I did my math wrong somewhere lol
-                    else:
-                        raise TheBackrooms("How did you even get here?")
-            case 2:
-                pass
-            case 3:
-                pass
+
+                        
+
+                case 3:
+                    # This is the same as the prior method, only with 3x 6-dided die instead of 4
+                    available_scores = []
+                    # For each stat
+                    for x in range(6):
+                        # Rolls (3, 6-sided die, without "advantage")
+                        available_scores.append(roll_die(3,6,0))
+                        
+                    # Sorts scores in descending order
+                    available_scores.sort(reverse=True)
+
+                    # Assigns scores to stats
+                    new_stats = assign_score_to_stat(available_scores)
+
+                    print(f"\n {self._name}'s stats are:")
+                    for stat in new_stats:
+                        print(f"{stat}: {new_stats[stat]}")
+                    self._str = new_stats["STR"]
+                    self._dex = new_stats["DEX"]
+                    self._con = new_stats["CON"]
+                    self._int = new_stats["INT"]
+                    self._wis = new_stats["WIS"]
+                    self._cha = new_stats["CHA"]
+                    return
+
+                case _:
+                    print("Sorry, that value is not recognised. Please enter 1, 2, or 3")
         
 
     def set_max_hp(self):
@@ -186,4 +259,36 @@ class Character():
         max_hp: {self._max_hp},
         """)
 
+def create_character():
+    # Creates character with default statline and no details
+    current_character = Character("dave", "", "None chosen", "None chosen", "None chosen", "None chosen", "No subclass chosen (yet)", 1, 8, 8, 8, 8, 8, 8, 0)
 
+    # # Name
+    current_character.set_name()
+    
+    # # Race
+    current_character.set_race()
+
+    # # Background
+    # current_character.set_background()
+
+    # # Alignment
+    # current_character.set_alignment()
+
+    # # Age
+    # current_character.set_age()
+
+    # # Level
+    # current_character.set_level()
+    
+    # # Class
+    # current_character.set_character_class()
+
+    # # Subclass
+    # current_character.set_character_subclass()
+
+    # Stats
+    current_character.set_stats()
+                
+    # Create character
+    return current_character
