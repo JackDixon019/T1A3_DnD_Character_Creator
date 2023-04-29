@@ -40,3 +40,4 @@ level_two_subclasses = ["Druid", "Wizard"]
 stat_options = ["Point buy", "Roll 4d6, pick 3", "Roll 3d6"]
 
 default_stats = {"STR" : 8, "DEX" : 8, "CON" : 8, "INT" : 8, "WIS" : 8, "CHA" : 8}
+new_stats = {"STR" : 8, "DEX" : 8, "CON" : 8, "INT" : 8, "WIS" : 8, "CHA" : 8}

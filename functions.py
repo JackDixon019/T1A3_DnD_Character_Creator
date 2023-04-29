@@ -3,8 +3,6 @@ from random import randint
 from libraries import default_stats
 
 
-
-
 def roll_die(number_of_die, dice_to_roll, advantage):
     rolls = []
     for i in range(number_of_die):
