@@ -1,6 +1,7 @@
 
-from character import Character, LevelOutOfBounds, TheBackrooms, create_character
-from functions import roll_die
+from character import Character, LevelOutOfBounds, TheBackrooms
+from functions import create_character
+from dice_roller import roll_die
 
 
 

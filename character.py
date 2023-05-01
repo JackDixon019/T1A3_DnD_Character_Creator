@@ -1,6 +1,7 @@
-from multiprocessing import Value
-from functions import assign_score_to_stat, roll_die
-from libraries import race_list, background_list, class_list, subclass_dictionary, level_one_subclasses, level_two_subclasses, stat_options, default_stats, new_stats
+
+
+from libraries import race_list, background_list, class_list, subclass_dictionary, level_one_subclasses, level_two_subclasses, stat_options, default_stats
+from dice_roller import roll_die, assign_score_to_stat
 
 # Custom error for players entering too low or high of a level
 class LevelOutOfBounds(Exception):
@@ -28,111 +29,63 @@ class Character():
         self._max_hp = max_hp
 
     # Sets the character's name
-    def set_name(self):
-        self._name = input("\nPlease enter your character's name: ")
+    def set_name(self, name):
+        self._name = name
+    
+    def get_name(self):
+        return self._name
 
     # Sets the character's race from the race library
-    def set_race(self):
-        while True:
-            print(f"\nPlease select {self._name}'s race from the following: ")
-            # Lists available options
-            for i in range(len(race_list)):
-                print(f"{i+1}. {race_list[i]}")
-            try:
-                race_index = int(input()) - 1
-                if race_index not in range(len(race_list)):
-                    print("That option is out of bounds. Please select from the options provided.")
-                else:
-                    self._race = race_list[race_index]
-                    return
+    def set_race(self, race):
+        self._race = race
 
-            except ValueError:
-                print("Please enter a number from the available list only")
-        
+    def get_race(self):
+        return self._race
 
     # Sets the character's background from the backgrounds library
-    def set_background(self):
-        while True:
-            print(f"\nPlease select {self._name}'s background from the following:")
-            # Lists available options
-            for i in range(len(background_list)):
-                print(f"{i+1}. {background_list[i]}")
-            try:
-                background_index = int(input("\n")) - 1
-                if background_index not in range(len(background_list)):
-                    print("That option is out of bounds. Please select from the options provided.")
-                else:
-                    self._background = background_list[background_index]
-                    return
+    def set_background(self, background):
+        self._background = background
 
-            except ValueError:
-                print("Please enter a number from the available list only")
+    def get_background(self):
+        return self._background
 
     # Sets the character's alignment (player-defined, but could be a dictionary of alignments)
-    def set_alignment(self):
-        self._alignment = input(f"\nPlease enter {self._name}'s alignment (e.g. Lawful Good): ")
+    def set_alignment(self, alignment):
+        self._alignment = alignment
+    
+    def get_alignment(self):
+        return self._alignment
 
     # Sets the character's age
-    def set_age(self):
-        self._age = input(f"\nPlease enter {self._name}'s age: ")
+    def set_age(self, age):
+        self._age = age
+    
+    def get_age(self):
+        return self._age
 
     # Sets the character's level. Errors if the level is outside of range
-    def set_level(self):
-        while True:
-            try:
-                level = int(input(f"\nPlease enter {self._name}'s level between 1 and 20: "))
-                if level not in range(1, 21):
-                    print("Please enter a number between 1 and 20")
-                else:
-                    self._level = level
-                    return
+    def set_level(self, level):
+        self._level = level
 
-            except ValueError:
-                print("Please enter a number between 1 and 20")
+    def get_level(self):
+        return self._level
+
 
 
     # Sets the character's class from the class list
-    def set_character_class(self):
-        while True:
-            try:
-                print(f"\nPlease select {self._name}'s class from the following:")
-                for i in range(0, len(class_list)):
-                    print(f"{i+1}. {class_list[i]}")
-                class_index = int(input("\n")) - 1
-                if class_index not in range(len(class_list)):
-                    print("Please enter a number from the list provided")
-                else:
-                    self._character_class = class_list[class_index]
-                    return
-            except ValueError:
-                print("Please try again. Make sure to select a number corresponding with the available options.")
+    def set_character_class(self, character_class):
+        self._character_class = character_class
 
+    def get_character_class(self):
+        return self._character_class
+        
     # Sets the character's subclass from the subclass dictionary
     # subclass_dicitonary has class as the key and a list of subclasses as the paired value
-    def set_character_subclass(self):
-        # Checks whether character has a subclass unlocked (unlocks at varying levels per class)
-        has_subclass = self._level >= 3 or (self._character_class in level_one_subclasses) or (self._level == 2 and self._character_class in level_two_subclasses)
-        
-        while has_subclass == True:
-            try:
-                print(f"\nPlease select {self._name}'s subclass from the following:")
-                # For the length of the list paired to the character's class:
-                for i in range(0, len(subclass_dictionary[self._character_class])):
-                    # Prints each item in the list. I.E. prints each subclass.
-                    print(f"{i+1}. {subclass_dictionary[self._character_class][i]}")
-                subclass_index = int(input("\n")) - 1
-                if 0 <= subclass_index <len(subclass_dictionary[self._character_class]):
-                    self._character_subclass = subclass_dictionary[self._character_class][subclass_index]
-                    return
-                else:
-                    print("Please enter a number from the list provided")
+    def set_character_subclass(self, character_subclass):
+        self._character_subclass = character_subclass
 
-            except ValueError:
-                print("Please enter a number from the list provided")
-
-        # If the character has not yet unlocked a subclass:
-        if not has_subclass:
-            print("\nYour character does not yet have a subclass unlocked.")
+    def get_character_subclass(self):
+        return self._character_subclass
 
     # Assigns values from a dictionary of ("stat" : score) pairs
     def set_stats(self, new_stats):
@@ -150,11 +103,7 @@ class Character():
 
     # Setting stats done in 3 ways: point buy, roll 4d6 choose highest 3, and roll 3d6
     # For context, d6 is a 6-sided die. Highest score total is 20 (outside of magic).
-    def create_new_stats(self):
-        print(f"How would you like to determine {self._name}'s base stats?")
-        for i in range(len(stat_options)):
-            print(f"{i+1} {stat_options[i]}")
-        method = input()
+    def create_new_stats(self, method):
         while True:
             # User has selected "point-buy"
             if method == "1":
@@ -263,9 +212,6 @@ class Character():
                 new_stats = assign_score_to_stat(available_scores)
                 self.set_stats(new_stats)
                 return
-
-            else:
-                print("Sorry, that value is not recognised. Please enter 1, 2, or 3")
         
 
     def set_max_hp(self):
@@ -290,36 +236,4 @@ class Character():
         max_hp: {self._max_hp},
         """)
 
-def create_character():
-    # Creates character with default statline and no details
-    current_character = Character("dave", "", "None chosen", "None chosen", "None chosen", "None chosen", "No subclass chosen (yet)", 1, 8, 8, 8, 8, 8, 8, 0)
 
-    # # Name
-    current_character.set_name()
-    
-    # # Race
-    current_character.set_race()
-
-    # # Background
-    current_character.set_background()
-
-    # # Alignment
-    # current_character.set_alignment()
-
-    # # Age
-    # current_character.set_age()
-
-    # # Level
-    current_character.set_level()
-    
-    # # Class
-    current_character.set_character_class()
-
-    # # Subclass
-    current_character.set_character_subclass()
-
-    # Stats
-    current_character.create_new_stats()
-                
-    # Create character
-    return current_character
