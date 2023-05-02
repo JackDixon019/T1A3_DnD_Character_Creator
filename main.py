@@ -20,7 +20,7 @@ try:
         match menu_select:
             case "1":
                 current_character = create_character()
-                current_character.get_character()
+                print(current_character.get_character())
             case "2":
                 print("View Character")
             case "3":

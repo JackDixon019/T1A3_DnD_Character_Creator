@@ -1,11 +1,10 @@
 import pytest
 from character import Character
 from libraries import default_stats
+from functions import check_input_within_given_range, select_background, select_class, select_race, select_subclass, increase_to_level
 
 
 test_subject = Character("Dave", "Human", "Noble", "LG", "23", "Barbarian", "Path of the Totem Warrior", 6, 18, 13, 16, 8, 12, 6, 71)
-
-
 
 def test_basic():
     assert "Hello" == "Hello"
@@ -60,5 +59,56 @@ def test_max_hp():
     assert test_subject.get_max_hp() == 71
     test_subject.set_max_hp("2")
     assert test_subject.get_max_hp() == 75
+
+def test_get_character():
+    assert test_subject.get_character() == """
+        Character name: Simon,
+        Race: Elf,
+        Background: Beggar,
+        Alignment: CE,
+        age: 2,
+        character_class: Cleric,
+        character_subclass: Test,
+        level: 5,
+        str: 8,
+        dex: 8,
+        con: 8,
+        int: 8,
+        wis: 8,
+        cha: 8,
+        max_hp: 75,
+        """
+
+def test_input_in_given_range():
+    assert check_input_within_given_range("4", -1, range(4)) == 3
+    assert check_input_within_given_range("1", -1, range(4)) == 0
+    assert check_input_within_given_range("5", -1, range(4)) == "loop"
+    assert check_input_within_given_range("0", -1, range(4)) == "loop"
+    assert check_input_within_given_range("string", -1, range(4)) == "loop"
+    
+def test_select_race(monkeypatch):
+    # Makes "3" the default value for input()
+    monkeypatch.setattr('builtins.input', lambda _: "3")
+    assert select_race("Dave") == "Orc"
+
+def test_select_background(monkeypatch):
+    # Makes "3" the default value for input()
+    monkeypatch.setattr('builtins.input', lambda _: "3")
+    assert select_background("Dave") == "Wild Child"
+
+def test_select_class(monkeypatch):
+    # Makes "3" the default value for input()
+    monkeypatch.setattr('builtins.input', lambda _: "3")
+    assert select_class("Dave") == "Cleric"
+
+def test_select_subclass(monkeypatch):
+    # Makes "3" the default value for input()
+    monkeypatch.setattr('builtins.input', lambda _: "3")
+    assert select_subclass("Dave", 6, "Cleric") == "Light Domain"
+
+def test_increase_to_level(monkeypatch):
+    # Makes "3" the default value for input()
+    monkeypatch.setattr('builtins.input', lambda _: "1")
+    assert increase_to_level(test_subject, 1) == None
 
 

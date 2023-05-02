@@ -172,8 +172,8 @@ class Character():
                         return
                     # If the user chooses to reallocate, resets default values to 8 and total to 0. 
                     elif retry == "2":
-                        for stat in default_stats:
-                            new_stats[stat] = default_stats[stat]
+                        for stat in stats:
+                            new_stats[stat] = stats[stat]
                         total = 0
                         break
                     # If the user enters an option not listed, prompts them to select a correct option
@@ -226,10 +226,6 @@ class Character():
                 new_stats = assign_score_to_stat(available_scores)
                 self.set_stats(new_stats)
                 return
-    
-    def asi(self):
-        self.assign_stats(self.get_stats(), 2, 20)
-        return
 
     def set_max_hp(self, roll):
         modifier = floor((self._con - 10)/2)
@@ -251,7 +247,7 @@ class Character():
         return self._max_hp
 
     def get_character(self):
-        print(f"""
+        return(f"""
         Character name: {self._name},
         Race: {self._race},
         Background: {self._background},
