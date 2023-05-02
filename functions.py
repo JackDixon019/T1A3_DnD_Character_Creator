@@ -1,6 +1,7 @@
-from turtle import back
+
 from character import Character
 from libraries import race_list, background_list, class_list, subclass_dictionary, stat_options
+from dice_roller import roll_die
 
 def check_input_within_given_range(user_input, index_correction, expected_range):
     # This function prompts the user to try again if they input a value outside of the given range
@@ -141,6 +142,36 @@ def create_character():
     # Create character
     return current_character
 
+def get_dice():
+    die_count = check_input_within_given_range(input("How many die would you like to roll? (max 1000) "), 0, range(1, 1001)) 
+    while die_count == "loop":
+        die_count = check_input_within_given_range(input("How many die would you like to roll? (max 1000) "), 0, range(1, 1001))
+        
+    die_type = check_input_within_given_range(input("How many sides does the dice have? (max 1000) "), 0, range(1, 1001))
+    while die_type == "loop":
+        die_type = check_input_within_given_range(input("How many sides does the dice have? (max 1000) "), 0, range(1, 1001))
+    
+    while True:
+        # Advantage is only used in cases of rolling 2d20
+        if die_count == 2 and die_type == 20:
+            advantage = check_input_within_given_range(input("Do you have advantage?\n1. No\n2. I have advantage\n3. I have disadvantage :(\n"), 0, range(1,4))
+            match advantage:
+                case 1:
+                    advantage = 0
+                    break
+                case 2:
+                    advantage = 1
+                    break
+                case 3:
+                    advantage = -1
+                    break
+                case _:
+                    "Please enter either 1, 2, or 3"
+        else:
+            advantage = 0
+            break
+
+    return roll_die(die_count, die_type, advantage)
 
 
 

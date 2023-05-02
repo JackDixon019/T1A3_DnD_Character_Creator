@@ -20,6 +20,8 @@ def roll_die(number_of_die, dice_to_roll, advantage):
 
     return sum(rolls)
 
+
+
 def assign_score_to_stat(available_scores):
     new_stats = {}
     available_stats = list(default_stats.keys())
