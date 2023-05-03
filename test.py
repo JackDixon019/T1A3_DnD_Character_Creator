@@ -83,6 +83,7 @@ def test_get_character():
 
 def test_save_and_view_character():
     save_character(test_subject)
+    # view character will fail if save character did not succeed
     view_character(test_subject.get_name())
 
 def test_select_character(monkeypatch):
@@ -91,6 +92,7 @@ def test_select_character(monkeypatch):
 
 def test_edit_character(monkeypatch):
     monkeypatch.setattr('builtins.input', lambda : "quit")
+    # This quits immediately. Other functions are tested independently
     edit_character(test_subject.get_name())
 
 def test_delete_character():
@@ -103,7 +105,7 @@ def test_input_in_given_range():
     assert check_input_within_given_range("1", -1, range(4)) == 0
     assert check_input_within_given_range("5", -1, range(4)) == "loop"
     assert check_input_within_given_range("0", -1, range(4)) == "loop"
-    assert check_input_within_given_range("string", -1, range(4)) == "loop"
+    assert check_input_within_given_range("abc", -1, range(4)) == "loop"
     
 def test_select_race(monkeypatch):
     # Makes "3" the default value for input()

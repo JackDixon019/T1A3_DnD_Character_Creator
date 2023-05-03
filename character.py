@@ -129,7 +129,6 @@ class Character():
 
                 # Match case checks for if the stat chosen is in the list of stats and the stat chosen is less than max_stat
                 if stat_choice in list(new_stats) and new_stats[stat_choice] < max_stat:
-                    
                     try:
                         # Gets the number of points the user wants to add
                         point_allocation = int(input(f"{stat_choice} has {min(max_stat - new_stats[stat_choice], points_to_assign-total)} available points remaining.\nHow many would you like to add?\n"))
