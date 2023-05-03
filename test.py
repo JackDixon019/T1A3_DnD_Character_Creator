@@ -1,7 +1,7 @@
 import pytest
 from character import Character
 from libraries import default_stats
-from functions import check_input_within_given_range, select_background, select_class, select_race, select_subclass, increase_to_level
+from functions import check_input_within_given_range, save_character, select_background, select_class, select_race, select_subclass, increase_to_level, view_character
 
 
 test_subject = Character("Dave", "Human", "Noble", "LG", "23", "Barbarian", "Path of the Totem Warrior", 6, 18, 13, 16, 8, 12, 6, 71)
@@ -61,23 +61,27 @@ def test_max_hp():
     assert test_subject.get_max_hp() == 75
 
 def test_get_character():
-    assert test_subject.get_character() == """
-        Character name: Simon,
-        Race: Elf,
-        Background: Beggar,
-        Alignment: CE,
-        age: 2,
-        character_class: Cleric,
-        character_subclass: Test,
-        level: 5,
-        str: 8,
-        dex: 8,
-        con: 8,
-        int: 8,
-        wis: 8,
-        cha: 8,
-        max_hp: 75,
-        """
+    assert test_subject.get_character() == {
+        "Character Name" : "Simon",
+        "Race" : "Elf",
+        "Background" : "Beggar",
+        "Alignment" : "CE",
+        "Age" : "2",
+        "Class" : "Cleric",
+        "Subclass" : "Test",
+        "Level" : 5,
+        "STR" : 8,
+        "DEX" : 8,
+        "CON" : 8,
+        "INT" : 8,
+        "WIS" : 8,
+        "CHA" : 8,
+        "Max HP" : 75
+    }
+
+def test_save_character():
+    save_character(test_subject)
+    view_character(test_subject.get_name())
 
 def test_input_in_given_range():
     assert check_input_within_given_range("4", -1, range(4)) == 3

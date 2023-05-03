@@ -1,7 +1,5 @@
 
-
-from math import ceil, floor
-from types import new_class
+from math import floor
 from libraries import default_stats, subclass_dictionary
 from dice_roller import roll_die, assign_score_to_stat
 
@@ -247,22 +245,25 @@ class Character():
         return self._max_hp
 
     def get_character(self):
-        return(f"""
-        Character name: {self._name},
-        Race: {self._race},
-        Background: {self._background},
-        Alignment: {self._alignment},
-        age: {self._age},
-        character_class: {self._character_class},
-        character_subclass: {self._character_subclass},
-        level: {self._level},
-        str: {self._str},
-        dex: {self._dex},
-        con: {self._con},
-        int: {self._int},
-        wis: {self._wis},
-        cha: {self._cha},
-        max_hp: {self._max_hp},
-        """)
+        return {
+        "Character Name" : self._name,
+        "Race" : self._race,
+        "Background" : self._background,
+        "Alignment" : self._alignment,
+        "Age" : self._age,
+        "Class" : self._character_class,
+        "Subclass" : self._character_subclass,
+        "Level" : self._level,
+        "STR" : self._str,
+        "DEX" : self._dex,
+        "CON" : self._con,
+        "INT" : self._int,
+        "WIS" : self._wis,
+        "CHA" : self._cha,
+        "Max HP" : self._max_hp
+        }
+    def __iter__(self):
+        return iter()
+
 
 

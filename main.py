@@ -1,6 +1,5 @@
 
-from character import Character, LevelOutOfBounds, TheBackrooms
-from functions import create_character, get_dice
+from functions import create_character, edit_character, get_dice, view_character
 
 
 
@@ -22,8 +21,15 @@ try:
                 print(current_character.get_character())
             case "2":
                 print("View Character")
+                current_character = input("Please enter the name of the character you would like to view: ")
+                while view_character(current_character) == "loop":
+                    current_character = input("Please enter the name of the character you would like to view: ")
             case "3":
                 print("Edit Character")
+                current_character = input("Please enter the name of the character you would like to edit: ")
+                while view_character(current_character) == "loop":
+                    current_character = input("Please enter the name of the character you would like to edit: ")
+                edit_character(current_character)
             case "4":
                 print("Delete Character")
             case "5":
