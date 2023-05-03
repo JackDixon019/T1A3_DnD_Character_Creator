@@ -2,39 +2,56 @@ from functions import check_input_within_given_range, select_background, select_
 import csv
 from character import Character
 import pprint
+from os import listdir, remove
 
 pp = pprint.PrettyPrinter(sort_dicts=False)
 
 def view_character(character_name):
+    file = f'./characters/{character_name}'
     try:
-        with open(character_name, "r") as character_file:
+        with open(file, "r") as character_file:
             reader = csv.reader(character_file)
             reader.__next__()
             for row in reader:
                 print(row)
 
     except FileNotFoundError as e:
-        print("No character with that name exists. Please check spelling and try again.")
+        print("\nNo character with that name exists. Please check spelling and try again.")
         return "loop"
+    
+def select_character(verb):
+    characters_list = listdir('./characters/')
+    print(f"\nAvailable characters to {verb} are:\n")
+    for i in range(len(characters_list)):
+        print(f"{i+1}. {characters_list[i]}")
+    character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
+    while character_index == "loop":
+        character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
+    return characters_list[character_index]
+
 
 def save_character(current_character):
     character_list = []
     character_data = current_character.get_character()
     for key in character_data:
         character_list.append([key, character_data[key]])
-    filename = current_character.get_name()
+    name = current_character.get_name()
     while True:
         try:
-            with open(filename, "r") as character_file:
-                print("A character with this name already exists. Do you want to overwrite?")
-                overwrite = check_input_within_given_range(input("\n1. Yes\n2. No"), 0, range(1,3))
-                if overwrite == 1:
-                    raise FileNotFoundError
-                elif overwrite == 2:
-                    filename = input("Please enter an alternative name to save this character sheet as")
+            file = f'./characters/{name}'
+            with open(file, "r") as character_file:
+                pass
+            print("\nA character with this name already exists. Do you want to overwrite?\n")
+            overwrite = check_input_within_given_range(input("1. Yes\n2. No\n"), 0, range(1,3))
+            while overwrite == "loop":
+                overwrite = check_input_within_given_range(input("1. Yes\n2. No\n"), 0, range(1,3))
+            if overwrite == 1:
+                raise FileNotFoundError
+            elif overwrite == 2:
+                name = input("\nPlease enter an alternative name to save this character sheet as")
 
         except FileNotFoundError as e:
-            with open(current_character.get_name(), "w") as character_file:
+            with open(file, "w") as character_file:
                 writer = csv.writer(character_file)
                 writer.writerow(["Attribute","Value"])
                 writer.writerows(character_list)
@@ -44,6 +61,7 @@ def save_character(current_character):
 
 def edit_character(character_name):
     value_list = []
+    file = f'./characters/{character_name}'
     with open(character_name, "r") as file:
         reader = csv.reader(file)
         reader.__next__()
@@ -92,8 +110,8 @@ def edit_character(character_name):
                 level = int(current_character.get_level())
                 new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {level} and 20: "), 0, range(level, 21))
                 # If input is outside of range or a ValueError, tries again
-                while level == "loop":
-                    level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {level} and 20: "), 0, range(level, 21))
+                while new_level == "loop":
+                    new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {level} and 20: "), 0, range(level, 21))
                 current_character.set_level(new_level)
                 increase_to_level(current_character, new_level)
             case "quit":
@@ -103,3 +121,7 @@ def edit_character(character_name):
                 continue
         pp.pprint(current_character.get_character())
         save_character(current_character)
+
+def delete_character(character_name):
+    filepath = f'./characters/{character_name}'
+    remove(filepath)

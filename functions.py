@@ -99,16 +99,15 @@ def create_character():
     
     # Race
     race = select_race(name)
-    # current_character.set_race(race)
 
     # Background
     background = select_background(name)
 
     # Alignment
-    alignment = input(f"Please enter {name}'s alignment (E.G. Lawful Good): ")
+    alignment = input(f"\nPlease enter {name}'s alignment (E.G. Lawful Good): ")
 
     # Age
-    age = input(f"Please enter {name}'s age: ")
+    age = input(f"\nPlease enter {name}'s age: ")
 
     # Level
     level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between 1 and 20: "), 0, range(1, 21))
@@ -128,7 +127,7 @@ def create_character():
     current_character = Character(name, race, background, alignment, age, character_class, subclass, level, 8, 8, 8, 8, 8, 8, 0)
 
     # Stats
-    print(f"How would you like to determine {name}'s base stats?")
+    print(f"\nHow would you like to determine {name}'s base stats?")
     for i in range(3):
         print(f"{i+1} {stat_options[i]}")
 
@@ -144,13 +143,13 @@ def create_character():
     return current_character
 
 def get_dice():
-    die_count = check_input_within_given_range(input("How many die would you like to roll? (max 1000) "), 0, range(1, 1001)) 
+    die_count = check_input_within_given_range(input("\nHow many die would you like to roll? (max 1000) "), 0, range(1, 1001)) 
     while die_count == "loop":
-        die_count = check_input_within_given_range(input("How many die would you like to roll? (max 1000) "), 0, range(1, 1001))
+        die_count = check_input_within_given_range(input("\nHow many die would you like to roll? (max 1000) "), 0, range(1, 1001))
         
-    die_type = check_input_within_given_range(input("How many sides does the dice have? (max 1000) "), 0, range(1, 1001))
+    die_type = check_input_within_given_range(input("\nHow many sides does the dice have? (max 1000) "), 0, range(1, 1001))
     while die_type == "loop":
-        die_type = check_input_within_given_range(input("How many sides does the dice have? (max 1000) "), 0, range(1, 1001))
+        die_type = check_input_within_given_range(input("\nHow many sides does the dice have? (max 1000) "), 0, range(1, 1001))
     
     while True:
         # Advantage is only used in cases of rolling 2d20

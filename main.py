@@ -1,47 +1,46 @@
 
 from functions import create_character, get_dice
-import pprint
-from files import save_character, edit_character, view_character
-
-pp = pprint.PrettyPrinter(sort_dicts=False)
+from files import save_character, edit_character, select_character, view_character, delete_character
 
 
 try:
     while True:
-        print("Welcome to The Tavern! \n What would you like to do here?")
+        print("\nWelcome to The Tavern! \nWhat would you like to do here?")
         menu_select = input("""
         1. Create a character
         2. View a character
         3. Edit a character
         4. Delete a character
         5. Roll some dice
-        6. Exit
+        6. Exit\n
         """)
         match menu_select:
             case "1":
+                # Create character
                 current_character = create_character()
                 save_character(current_character)
+                print("\n")
                 for key in current_character.get_character():
                     print(f"{key}: {current_character.get_character()[key]}")
-                pp.pprint(current_character.get_character())
             case "2":
-                print("View Character")
-                current_character = input("Please enter the name of the character you would like to view: ")
-                while view_character(current_character) == "loop":
-                    current_character = input("Please enter the name of the character you would like to view: ")
+                # View character
+                character_name = select_character("view")
+                view_character(character_name)
+
             case "3":
-                print("Edit Character")
-                current_character = input("Please enter the name of the character you would like to edit: ")
-                while view_character(current_character) == "loop":
-                    current_character = input("Please enter the name of the character you would like to edit: ")
-                edit_character(current_character)
+                # Edit character
+                character_name = select_character("edit")
+                edit_character(character_name)
             case "4":
-                print("Delete Character")
+                # Delete character
+                character_name = select_character("delete")
+                delete_character(character_name)
             case "5":
-                print("Roll Dice")
+                # Roll dice
                 print(get_dice())
                 
             case "6":
+                # Quit
                 print("Program now exiting")
                 break
             case _:
