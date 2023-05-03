@@ -1,7 +1,9 @@
 
-from functions import create_character, edit_character, get_dice, view_character
+from functions import create_character, get_dice
+import pprint
+from files import save_character, edit_character, view_character
 
-
+pp = pprint.PrettyPrinter(sort_dicts=False)
 
 
 try:
@@ -18,7 +20,10 @@ try:
         match menu_select:
             case "1":
                 current_character = create_character()
-                print(current_character.get_character())
+                save_character(current_character)
+                for key in current_character.get_character():
+                    print(f"{key}: {current_character.get_character()[key]}")
+                pp.pprint(current_character.get_character())
             case "2":
                 print("View Character")
                 current_character = input("Please enter the name of the character you would like to view: ")

@@ -1,3 +1,3 @@
-from functions import edit_character
+from files import edit_character
 
 edit_character("test")

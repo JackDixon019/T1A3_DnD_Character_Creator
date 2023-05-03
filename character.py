@@ -3,6 +3,8 @@ from math import floor
 from libraries import default_stats, subclass_dictionary
 from dice_roller import roll_die, assign_score_to_stat
 
+
+
 # Custom error for players entering too low or high of a level
 class LevelOutOfBounds(Exception):
     pass
@@ -262,8 +264,6 @@ class Character():
         "CHA" : self._cha,
         "Max HP" : self._max_hp
         }
-    def __iter__(self):
-        return iter()
 
 
 
