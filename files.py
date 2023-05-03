@@ -7,9 +7,9 @@ from os import listdir, remove
 pp = pprint.PrettyPrinter(sort_dicts=False)
 
 def view_character(character_name):
-    file = f'./characters/{character_name}'
+    filepath = f'./characters/{character_name}'
     try:
-        with open(file, "r") as character_file:
+        with open(filepath, "r") as character_file:
             reader = csv.reader(character_file)
             reader.__next__()
             for row in reader:
@@ -38,8 +38,8 @@ def save_character(current_character):
     name = current_character.get_name()
     while True:
         try:
-            file = f'./characters/{name}'
-            with open(file, "r") as character_file:
+            filepath = f'./characters/{name}'
+            with open(filepath, "r") as character_file:
                 pass
             print("\nA character with this name already exists. Do you want to overwrite?\n")
             overwrite = check_input_within_given_range(input("1. Yes\n2. No\n"), 0, range(1,3))
@@ -51,7 +51,7 @@ def save_character(current_character):
                 name = input("\nPlease enter an alternative name to save this character sheet as")
 
         except FileNotFoundError as e:
-            with open(file, "w") as character_file:
+            with open(filepath, "w") as character_file:
                 writer = csv.writer(character_file)
                 writer.writerow(["Attribute","Value"])
                 writer.writerows(character_list)
@@ -61,8 +61,8 @@ def save_character(current_character):
 
 def edit_character(character_name):
     value_list = []
-    file = f'./characters/{character_name}'
-    with open(character_name, "r") as file:
+    filepath = f'./characters/{character_name}'
+    with open(filepath, "r") as file:
         reader = csv.reader(file)
         reader.__next__()
         for row in reader:

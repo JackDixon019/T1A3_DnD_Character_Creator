@@ -1,7 +1,8 @@
 import pytest
 from character import Character
 from libraries import default_stats
-from functions import check_input_within_given_range, save_character, select_background, select_class, select_race, select_subclass, increase_to_level, view_character
+from functions import check_input_within_given_range, select_background, select_class, select_race, select_subclass, increase_to_level
+from files import delete_character, edit_character, save_character, select_character, view_character
 
 
 test_subject = Character("Dave", "Human", "Noble", "LG", "23", "Barbarian", "Path of the Totem Warrior", 6, 18, 13, 16, 8, 12, 6, 71)
@@ -79,9 +80,23 @@ def test_get_character():
         "Max HP" : 75
     }
 
-def test_save_character():
+
+def test_save_and_view_character():
     save_character(test_subject)
     view_character(test_subject.get_name())
+
+def test_select_character(monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda _: "1")
+    select_character("view")
+
+def test_edit_character(monkeypatch):
+    monkeypatch.setattr('builtins.input', lambda : "quit")
+    edit_character(test_subject.get_name())
+
+def test_delete_character():
+    delete_character(test_subject.get_name())
+    
+
 
 def test_input_in_given_range():
     assert check_input_within_given_range("4", -1, range(4)) == 3
