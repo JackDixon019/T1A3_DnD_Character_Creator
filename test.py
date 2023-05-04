@@ -10,15 +10,22 @@ test_subject = Character("Dave", "Human", "Noble", "LG", "23", "Barbarian", "Pat
 def test_basic():
     assert "Hello" == "Hello"
 
+# These tests test the Character class functions:
+
 def test_name():
+#    checks name is default value "Dave"
    assert test_subject.get_name() == "Dave"
-   assert test_subject.get_name() != "Simon"
+#    sets name to "Simon"
    test_subject.set_name("Simon")
+#    checks name was changed to "Simon"
    assert test_subject.get_name() == "Simon"
 
 def test_race():
+    # Checks race is default value "Human"
     assert test_subject.get_race() == "Human"
+    # Sets race to "Elf"
     test_subject.set_race("Elf")
+    # Checks race successfully set to "Elf"
     assert test_subject.get_race() == "Elf"
     
 def test_background():
@@ -81,6 +88,8 @@ def test_get_character():
     }
 
 
+# These test the file saving, viewing, and editing functions:
+
 def test_save_and_view_character():
     save_character(test_subject)
     # view character will fail if save character did not succeed
@@ -99,9 +108,12 @@ def test_delete_character():
     delete_character(test_subject.get_name())
     
 
+# These test the "functions" module functions. Mostly about user input:
 
 def test_input_in_given_range():
+    # Checks limits of range, inside of range, out of range + or -, and string input
     assert check_input_within_given_range("4", -1, range(4)) == 3
+    assert check_input_within_given_range("2", -1, range(4)) == 1
     assert check_input_within_given_range("1", -1, range(4)) == 0
     assert check_input_within_given_range("5", -1, range(4)) == "loop"
     assert check_input_within_given_range("0", -1, range(4)) == "loop"
@@ -128,8 +140,14 @@ def test_select_subclass(monkeypatch):
     assert select_subclass("Dave", 6, "Cleric") == "Light Domain"
 
 def test_increase_to_level(monkeypatch):
-    # Makes "3" the default value for input()
-    monkeypatch.setattr('builtins.input', lambda _: "1")
-    assert increase_to_level(test_subject, 1) == None
+    # Makes "2" the default value for input(). 
+    # Here, it selects "average" for hp raise choice
+    monkeypatch.setattr('builtins.input', lambda _: "2")
+    # Checks that setting level to the same level doesn't cause changes
+    assert increase_to_level(test_subject, 5) == 75
+    # Raises the level by 1, to 6
+    test_subject.set_level(6)
+    # Checks that the max hp is raised by 1 level's worth: 4 pts
+    assert increase_to_level(test_subject, 5) == 79
 
 

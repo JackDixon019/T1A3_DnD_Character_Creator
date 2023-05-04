@@ -73,7 +73,7 @@ def increase_to_level(current_character, starting_level):
     hp_choice = check_input_within_given_range(input(f"How would you like to set a max HP?\n1. Roll\n2. Average"), 0, [1, 2])
     while hp_choice == "loop":
         hp_choice = check_input_within_given_range(input(f"How would you like to set a max HP?\n1. Roll\n2. Average"), 0, [1, 2])
-    level_counter = starting_level
+    level_counter = starting_level + 1
 
     # These two steps are kinda combined into one awkwardly. 
     # max hp value is determined each time a character levels up, and every 4 levels a character gets the choice to increase their stats.
@@ -90,7 +90,7 @@ def increase_to_level(current_character, starting_level):
                 print(f"Please refer to the Player's Handbook for a list of choosable Feats")
         current_character.set_max_hp(hp_choice)
         level_counter += 1
-    return
+    return current_character.get_max_hp()
 
 
 def create_character():
@@ -137,7 +137,7 @@ def create_character():
 
     current_character.create_new_stats(stat_choice)
 
-    increase_to_level(current_character, 1)
+    increase_to_level(current_character, 0)
 
     # Create character
     return current_character

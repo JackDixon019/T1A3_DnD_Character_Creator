@@ -1,44 +1,57 @@
-from functions import check_input_within_given_range, select_background, select_class, select_race, select_subclass, increase_to_level
 import csv
-from character import Character
 import pprint
 from os import listdir, remove
 
+from functions import check_input_within_given_range, select_background, select_class, select_race, select_subclass, increase_to_level
+from character import Character
+
+# This prevents pprint from sorting the dictionaries alphabetically.
 pp = pprint.PrettyPrinter(sort_dicts=False)
+
+
+def select_character(verb):
+    # Creates a list of files in the directory
+    characters_list = listdir('./characters/')
+    # {verb} contextually changes based on why the user is selecting a character (delete, view, edit etc.)
+    print(f"\nAvailable characters to {verb} are:\n")
+    # prints the name of each file in a numbered list
+    for i in range(len(characters_list)):
+        print(f"{i+1}. {characters_list[i]}")
+    # receives user input. checks it is within the range of numbers provided
+    character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
+    # loops back to user input if value outside of range
+    while character_index == "loop":
+        character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
+    # returns the name of the file
+    return characters_list[character_index]
 
 def view_character(character_name):
     filepath = f'./characters/{character_name}'
     try:
+        # If the file exists, prints each row (except the title row)
         with open(filepath, "r") as character_file:
             reader = csv.reader(character_file)
             reader.__next__()
             for row in reader:
                 print(row)
-
+    # Catches if file does not exist.
     except FileNotFoundError as e:
         print("\nNo character with that name exists. Please check spelling and try again.")
         return "loop"
     
-def select_character(verb):
-    characters_list = listdir('./characters/')
-    print(f"\nAvailable characters to {verb} are:\n")
-    for i in range(len(characters_list)):
-        print(f"{i+1}. {characters_list[i]}")
-    character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
-    while character_index == "loop":
-        character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
-    return characters_list[character_index]
-
 
 def save_character(current_character):
     character_list = []
+    # gets a dicitonary of character stats and values
     character_data = current_character.get_character()
+    # each key and value pair is assigned a list within the list character_list
     for key in character_data:
         character_list.append([key, character_data[key]])
     name = current_character.get_name()
     while True:
         try:
             filepath = f'./characters/{name}'
+            # If the file can open, checks with the user if they want to overwrite
             with open(filepath, "r") as character_file:
                 pass
             print("\nA character with this name already exists. Do you want to overwrite?\n")
@@ -49,7 +62,7 @@ def save_character(current_character):
                 raise FileNotFoundError
             elif overwrite == 2:
                 name = input("\nPlease enter an alternative name to save this character sheet as")
-
+        # If no file is found, or if user chooses to overwrite, writes character_list to csv file
         except FileNotFoundError as e:
             with open(filepath, "w") as character_file:
                 writer = csv.writer(character_file)
@@ -65,63 +78,87 @@ def edit_character(character_name):
     with open(filepath, "r") as file:
         reader = csv.reader(file)
         reader.__next__()
+        # assigns each value from the character sheet to a list
         for row in reader:
             value_list.append(row[1])
+    # each value from the list is called and assigned to the current_character object in the Character() class
     current_character = Character(value_list[0], value_list[1], value_list[2],
                                   value_list[3], value_list[4], value_list[5], 
                                   value_list[6], int(value_list[7]), int(value_list[8]), 
                                   int(value_list[9]), int(value_list[10]), int(value_list[11]), 
                                   int(value_list[12]), int(value_list[13]), int(value_list[14]))
     while True:
-        print("\nPlease select an attribute to edit from the list below, or type 'quit' to quit:\n")
+        print("\nPlease select an attribute to edit from the list below, or type 'quit' to save and quit:\n")
         attribute_list = list(current_character.get_character().keys())
         name = current_character.get_name()
-
+        
+        # prints each attribute (aside from stats) in a numbered list
         for i in range(8):
             print(f"{i+1}. {attribute_list[i]}")
-        attribute_index = input()
+        print("\n or type 'quit' to quit")
+        attribute_index = input().lower()
         match attribute_index:
+            # for each input, allows the user to edit the corrersponding attribute
+            # editing handled with same functions used to create character
             case "1":
+                # change name
                 new_name = input("Please enter a new name:\n")
                 current_character.set_name(new_name)
             case "2":
+                # change race
                 race = select_race(name)
                 current_character.set_race(race)
             case "3":
+                # change bakground 
                 background = select_background(name)
                 current_character.set_background(background)
             case "4":
+                # change alignment
                 alignment = input("Please enter a new alignment:\n")
                 current_character.set_alignment(alignment)
             case "5":
+                # change age
                 age = input(f"Please enter {name}'s age: ")
                 current_character.set_age(age)
             case "6":
+                # change class
                 character_class = select_class(name)
                 current_character.set_character_class(character_class)
+                # changing class necessitates changing subclass as well, so both are called here
+                level = current_character.get_level()
+                subclass = select_subclass(name, level, character_class)
+                current_character.set_character_subclass(subclass) 
             case "7":
+                # change subclass
                 character_class = current_character.get_character_class()
-                level = int(current_character.get_level())
-                print(type(level))
+                level = current_character.get_level()
                 # Checks whether character has a subclass unlocked (unlocks at varying levels per class)
                 subclass = select_subclass(name, level, character_class)
                 current_character.set_character_subclass(subclass)     
             case "8":
-                level = int(current_character.get_level())
-                new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {level} and 20: "), 0, range(level, 21))
+                # change level
+                starting_level = int(current_character.get_level())
+                new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {starting_level} and 20: "), 0, range(starting_level, 21))
                 # If input is outside of range or a ValueError, tries again
                 while new_level == "loop":
-                    new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {level} and 20: "), 0, range(level, 21))
+                    new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {starting_level} and 20: "), 0, range(starting_level, 21))
                 current_character.set_level(new_level)
-                increase_to_level(current_character, new_level)
+                increase_to_level(current_character, starting_level)
             case "quit":
                 break
             case _:
+                # if unexpected value is entered, prompts the user to try again
                 print("Please enter a number from the list provided")
                 continue
+        # pretty-prints character data
         pp.pprint(current_character.get_character())
+        # saves character
         save_character(current_character)
 
 def delete_character(character_name):
     filepath = f'./characters/{character_name}'
-    remove(filepath)
+    try:
+        remove(filepath)
+    except FileNotFoundError as e:
+        print("File already removed.")
+    

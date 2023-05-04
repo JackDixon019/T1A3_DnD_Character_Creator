@@ -3,14 +3,6 @@ from math import floor
 from libraries import default_stats, subclass_dictionary
 from dice_roller import roll_die, assign_score_to_stat
 
-
-
-# Custom error for players entering too low or high of a level
-class LevelOutOfBounds(Exception):
-    pass
-class TheBackrooms(Exception):
-    pass
-
 class Character():
     # Defines the characteristics of a character
     def __init__(self, name, race, background, alignment, age, character_class, character_subclass, level, str, dex, con, int, wis, cha, max_hp):
@@ -71,8 +63,6 @@ class Character():
 
     def get_level(self):
         return self._level
-
-
 
     # Sets the character's class from the class list
     def set_character_class(self, character_class):
@@ -211,7 +201,7 @@ class Character():
 
 
             elif method == 3:
-                # This is the same as the prior method, only with 3x 6-dided die instead of 4
+                # This is the same as the prior method, only with 3x 6-dided die instead of 4, and no die removed.
                 available_scores = []
                 # For each stat
                 for x in range(6):
@@ -233,7 +223,7 @@ class Character():
         if self._max_hp <= 1:
             self._max_hp += modifier + subclass_dictionary[self._character_class][1]
             return
-        elif roll == "1":
+        elif roll == 1:
             self._max_hp += modifier + roll_die(1, subclass_dictionary[self._character_class][1],0)
         else:
             self._max_hp += modifier + subclass_dictionary[self._character_class][1]/2 + 1
