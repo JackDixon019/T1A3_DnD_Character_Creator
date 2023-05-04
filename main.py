@@ -1,11 +1,16 @@
 
 from functions import create_character, get_dice
 from files import save_character, edit_character, select_character, view_character, delete_character
+import colored
+from colored import fg, bg, attr, stylize
+
+info = colored.fg("green")
+error = colored.fg("red")
 
 # Main menu
 try:
     while True:
-        print("\nWelcome to The Tavern! \nWhat would you like to do here?")
+        print(stylize("\nWelcome to The Tavern!\nWhat would you like to do here?", info))
         menu_select = input("""
         1. Create a character
         2. View a character
@@ -43,14 +48,14 @@ try:
                 
             case "6":
                 # Quit
-                print("Program now exiting")
+                print("\nProgram now exiting")
                 break
             case _:
-                print("Please enter a number from the list")
+                print(stylize("\nPlease enter a number from the list", error))
 
 # Whole program wrapped in try:except to catch stray errors.
 except Exception as e:
     print(e)
-    print("Something went wrong :(")
+    print(stylize("Something went wrong :(", error))
     
 

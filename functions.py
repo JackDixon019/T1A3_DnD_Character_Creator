@@ -147,9 +147,9 @@ def get_dice():
     while die_count == "loop":
         die_count = check_input_within_given_range(input("\nHow many die would you like to roll? (max 1000) "), 0, range(1, 1001))
         
-    die_type = check_input_within_given_range(input("\nHow many sides does the dice have? (max 1000) "), 0, range(1, 1001))
+    die_type = check_input_within_given_range(input("\nHow many sides does the dice have? (min 2, max 1000) "), 0, range(2, 1001))
     while die_type == "loop":
-        die_type = check_input_within_given_range(input("\nHow many sides does the dice have? (max 1000) "), 0, range(1, 1001))
+        die_type = check_input_within_given_range(input("\nHow many sides does the dice have? (min 2, max 1000) "), 0, range(2, 1001))
     
     while True:
         # Advantage is only used in cases of rolling 2d20

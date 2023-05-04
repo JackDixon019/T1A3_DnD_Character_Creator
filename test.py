@@ -1,3 +1,4 @@
+from dice_roller import roll_die
 import pytest
 from character import Character
 from libraries import default_stats
@@ -149,5 +150,13 @@ def test_increase_to_level(monkeypatch):
     test_subject.set_level(6)
     # Checks that the max hp is raised by 1 level's worth: 4 pts
     assert increase_to_level(test_subject, 5) == 79
+
+
+# Checks dice rolling feature 
+def test_dice_roller():
+    for i in range(2,1001):
+        assert roll_die(1, i, 0) in range(1,i+1)
+    for i in range(1,1001):
+        assert roll_die(i, 20, 0) in range(i, 20*i+1)
 
 
