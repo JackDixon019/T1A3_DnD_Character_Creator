@@ -5,20 +5,21 @@ import colored
 from colored import fg, bg, attr, stylize
 
 info = colored.fg("green")
+options = colored.fg(218)
 error = colored.fg("red")
 
 # Main menu
 try:
     while True:
         print(stylize("\nWelcome to The Tavern!\nWhat would you like to do here?", info))
-        menu_select = input("""
+        menu_select = input(stylize("""
         1. Create a character
         2. View a character
         3. Edit a character
         4. Delete a character
         5. Roll some dice
         6. Exit\n
-        """)
+        """, options))
         match menu_select:
             case "1":
                 # Creates character object
@@ -51,7 +52,7 @@ try:
                 print("\nProgram now exiting")
                 break
             case _:
-                print(stylize("\nPlease enter a number from the list", error))
+                print(stylize(f'\nInput not recognised\nPlease enter a number from the list provided', error))
 
 # Whole program wrapped in try:except to catch stray errors.
 except Exception as e:
