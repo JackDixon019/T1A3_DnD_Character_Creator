@@ -20,59 +20,45 @@ def check_input_within_given_range(user_input, index_correction, expected_range)
             print(stylize("\nPlease enter a number from the available list only", error))
             return "loop"
 
+def print_list(name, attribute, list_name,  offset = 1, range_start = 0):
+    print(stylize(f"\nPlease select {name}'s {attribute} from the following: ", info))
+    for i in range(range_start, len(list_name)):
+        print(stylize(f"{i+offset}. {list_name[i]}", options))
+
+def input_loop(list_name, prompt = "\n", range_start = 0):
+    index = check_input_within_given_range(input(prompt), -1, range(len(list_name)-range_start))
+    while index == "loop":
+        index = check_input_within_given_range(input(prompt), -1, range(len(list_name)-range_start))
+    return list_name[index]
+
 def select_race(name):
-    print(stylize(f"\nPlease select {name}'s race from the following: ", info))
-    # Lists available options
-    for i in range(len(race_list)):
-        print(stylize(f"{i+1}. {race_list[i]}", options))
-    # Checks user input is within the available races list
-    race_index = check_input_within_given_range(input("\n"), -1, range(len(race_list)))
-    # If input is outside of range or a ValueError, tries again
-    while race_index == "loop":
-        race_index = check_input_within_given_range(input("\n"), -1, range(len(race_list)))
-    return race_list[race_index]
+    # Lists available options, receives user input, checks user input, returns corresponding value
+    print_list(name, "race", race_list)
+    return input_loop(race_list)
+
 
 def select_background(name):
-    print(stylize(f"\nPlease select {name}'s background from the following:", info))
-    # Lists available options
-    for i in range(len(background_list)):
-        print(stylize(f"{i+1}. {background_list[i]}", options))
-    # Checks user input is within the available list
-    background_index = check_input_within_given_range(input("\n"), -1, range(len(background_list)))
-    # If input is outside of range or a ValueError, tries again
-    while background_index == "loop":
-        background_index = check_input_within_given_range(input("\n"), -1, range(len(background_list)))
-    return background_list[background_index]
+    # Lists available options, receives user input, checks user input, returns corresponding value
+    print_list(name, "background", background_list)
+    return input_loop(background_list)
 
 def select_class(name):
-    print(stylize(f"\nPlease select {name}'s class from the following:", info))
-    for i in range(len(class_list)):
-        print(stylize(f"{i+1}. {class_list[i]}", options))
-    # Checks user input is within the available list
-    class_index = check_input_within_given_range(input("\n"), -1, range(len(class_list)))
-    # If input is outside of range or a ValueError, tries again
-    while class_index == "loop":
-        class_index = check_input_within_given_range(input("\n"), -1, range(len(class_list)))
-    return class_list[class_index]
+    # Lists available options
+    print_list(name, "class", class_list)
+    return input_loop(class_list)
 
+
+# This is broken. needs fixing
 def select_subclass(name, level, character_class):
     # subclass_dictionary[character_class][0] is the level a class' subclass is unlocked
     if level < subclass_dictionary[character_class][0]:
         print(stylize("\nYour character does not yet have a subclass unlocked.", colored.fg("yellow")))
         return "Subclass not yet unlocked"
-    
-    print(stylize(f"\nPlease select {name}'s subclass from the following:", info))
-    # For the length of the list paired to the character's class. 
+
+    # Lists available options, receives user input, checks user input, returns corresponding value
     # Starts at position 2 because 0 and 1 are not subclasses
-    for i in range(2, len(subclass_dictionary[character_class])):
-        # Prints each item in the list. I.E. prints each subclass.
-        print(stylize(f"{i-1}. {subclass_dictionary[character_class][i]}", options))
-    # Checks user input is within the available list
-    subclass_index = check_input_within_given_range(input("\n"), 1, range(2, len(subclass_dictionary[character_class])))
-    # If input is outside of range or a ValueError, tries again
-    while subclass_index == "loop":
-        subclass_index = check_input_within_given_range(input("\n"), 1, range(2, len(subclass_dictionary[character_class])))
-    return subclass_dictionary[character_class][subclass_index]
+    print_list(name, "subclass", subclass_dictionary[character_class], -1, 2)
+    return input_loop(subclass_dictionary[character_class], "\n", 2)
 
 def increase_to_level(current_character, starting_level):
     # Checks user input is within the available list
