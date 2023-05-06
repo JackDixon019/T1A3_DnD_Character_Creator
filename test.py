@@ -139,6 +139,12 @@ def test_select_subclass(monkeypatch):
     # Makes "3" the default value for input()
     monkeypatch.setattr('builtins.input', lambda _: "3")
     assert select_subclass("Dave", 6, "Cleric") == "Light Domain"
+    monkeypatch.setattr('builtins.input', lambda _: "1")
+    assert select_subclass("Dave", 6, "Cleric") == "Knowledge Domain"
+    monkeypatch.setattr('builtins.input', lambda _: "7")
+    assert select_subclass("Dave", 6, "Cleric") == "War Domain"
+
+
 
 def test_increase_to_level(monkeypatch):
     # Makes "2" the default value for input(). 

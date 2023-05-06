@@ -25,10 +25,10 @@ def print_list(name, attribute, list_name,  offset = 1, range_start = 0):
     for i in range(range_start, len(list_name)):
         print(stylize(f"{i+offset}. {list_name[i]}", options))
 
-def input_loop(list_name, prompt = "\n", range_start = 0):
-    index = check_input_within_given_range(input(prompt), -1, range(len(list_name)-range_start))
+def input_loop(list_name, prompt = "\n", range_start = 0, offset = -1):
+    index = check_input_within_given_range(input(prompt), offset, range(range_start, len(list_name)))
     while index == "loop":
-        index = check_input_within_given_range(input(prompt), -1, range(len(list_name)-range_start))
+        index = check_input_within_given_range(input(prompt), offset, range(range_start, len(list_name)))
     return list_name[index]
 
 def select_race(name):
@@ -58,7 +58,7 @@ def select_subclass(name, level, character_class):
     # Lists available options, receives user input, checks user input, returns corresponding value
     # Starts at position 2 because 0 and 1 are not subclasses
     print_list(name, "subclass", subclass_dictionary[character_class], -1, 2)
-    return input_loop(subclass_dictionary[character_class], "\n", 2)
+    return input_loop(subclass_dictionary[character_class], "\n", 2, 1)
 
 def increase_to_level(current_character, starting_level):
     # Checks user input is within the available list
