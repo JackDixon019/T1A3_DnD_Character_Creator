@@ -1,9 +1,17 @@
+from asyncore import loop
 import csv
 import pprint
 from os import listdir, remove
 
-from functions import check_input_within_given_range, select_background, select_class, select_race, select_subclass, increase_to_level
+from functions import input_loop, select_background, select_class, select_race, select_subclass, increase_to_level
 from character import Character
+import colored
+from colored import stylize
+
+info = colored.fg("green")
+options = colored.fg(218)
+error = colored.fg("red")
+variable = colored.fg("yellow")
 
 # This prevents pprint from sorting the dictionaries alphabetically.
 pp = pprint.PrettyPrinter(sort_dicts=False)
@@ -13,30 +21,27 @@ def select_character(verb):
     # Creates a list of files in the directory
     characters_list = listdir('./characters/')
     # {verb} contextually changes based on why the user is selecting a character (delete, view, edit etc.)
-    print(f"\nAvailable characters to {verb} are:\n")
+    print(stylize(f"\nAvailable characters to {verb} are:\n", info))
     # prints the name of each file in a numbered list
     for i in range(len(characters_list)):
-        print(f"{i+1}. {characters_list[i]}")
+        print(stylize(f"{i+1}. {characters_list[i]}", options))
     # receives user input. checks it is within the range of numbers provided
-    character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
-    # loops back to user input if value outside of range
-    while character_index == "loop":
-        character_index = check_input_within_given_range(input("\n"), -1, range(len(characters_list)))
-    # returns the name of the file
-    return characters_list[character_index]
+    character_index = input_loop(characters_list)
+    return character_index
 
 def view_character(character_name):
     filepath = f'./characters/{character_name}'
+    print("\n")
     try:
         # If the file exists, prints each row (except the title row)
         with open(filepath, "r") as character_file:
             reader = csv.reader(character_file)
             reader.__next__()
             for row in reader:
-                print(row)
+                print(stylize(row, variable))
     # Catches if file does not exist.
     except FileNotFoundError as e:
-        print("\nNo character with that name exists. Please check spelling and try again.")
+        print(stylize("\nNo character with that name exists. Please check spelling and try again.", error))
         return "loop"
     
 
@@ -54,21 +59,20 @@ def save_character(current_character):
             # If the file can open, checks with the user if they want to overwrite
             with open(filepath, "r") as character_file:
                 pass
-            print("\nA character with this name already exists. Do you want to overwrite?\n")
-            overwrite = check_input_within_given_range(input("1. Yes\n2. No\n"), 0, range(1,3))
-            while overwrite == "loop":
-                overwrite = check_input_within_given_range(input("1. Yes\n2. No\n"), 0, range(1,3))
+            print(stylize("\nNow saving character", variable))
+            print(stylize("\nA character with this name already exists. Do you want to overwrite?\n", info))
+            overwrite = input_loop(range(1,3), stylize("1. Yes\n2. No\n", options))
             if overwrite == 1:
                 raise FileNotFoundError
             elif overwrite == 2:
-                name = input("\nPlease enter an alternative name to save this character sheet as")
+                name = input(stylize("\nPlease enter an alternative name to save this character sheet as:\n", info))
         # If no file is found, or if user chooses to overwrite, writes character_list to csv file
         except FileNotFoundError as e:
             with open(filepath, "w") as character_file:
                 writer = csv.writer(character_file)
                 writer.writerow(["Attribute","Value"])
                 writer.writerows(character_list)
-            print("Character saved!")
+            print(stylize("\nCharacter saved!", variable))
             return
     
 
@@ -88,21 +92,21 @@ def edit_character(character_name):
                                   int(value_list[9]), int(value_list[10]), int(value_list[11]), 
                                   int(value_list[12]), int(value_list[13]), int(value_list[14]))
     while True:
-        print("\nPlease select an attribute to edit from the list below, or type 'quit' to save and quit:\n")
+        print(stylize("\nPlease select an attribute to edit from the list below, or type 'quit' to save and quit:\n", info))
         attribute_list = list(current_character.get_character().keys())
         name = current_character.get_name()
         
         # prints each attribute (aside from stats) in a numbered list
         for i in range(8):
-            print(f"{i+1}. {attribute_list[i]}")
-        print("\n or type 'quit' to quit")
+            print(stylize(f"{i+1}. {attribute_list[i]}", options))
+        print(stylize("Or type 'quit' to quit\n", options))
         attribute_index = input().lower()
         match attribute_index:
             # for each input, allows the user to edit the corrersponding attribute
             # editing handled with same functions used to create character
             case "1":
                 # change name
-                new_name = input("Please enter a new name:\n")
+                new_name = input(stylize("Please enter a new name:\n", info))
                 current_character.set_name(new_name)
             case "2":
                 # change race
@@ -114,11 +118,11 @@ def edit_character(character_name):
                 current_character.set_background(background)
             case "4":
                 # change alignment
-                alignment = input("Please enter a new alignment:\n")
+                alignment = input(stylize("Please enter a new alignment:\n", info))
                 current_character.set_alignment(alignment)
             case "5":
                 # change age
-                age = input(f"Please enter {name}'s age: ")
+                age = input(stylize(f"Please enter {name}'s age:\n", info))
                 current_character.set_age(age)
             case "6":
                 # change class
@@ -138,17 +142,15 @@ def edit_character(character_name):
             case "8":
                 # change level
                 starting_level = int(current_character.get_level())
-                new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {starting_level} and 20: "), 0, range(starting_level, 21))
-                # If input is outside of range or a ValueError, tries again
-                while new_level == "loop":
-                    new_level = check_input_within_given_range(input(f"\nPlease enter {name}'s level between {starting_level} and 20: "), 0, range(starting_level, 21))
+                next_level = starting_level + 1
+                new_level = input_loop(range(next_level, 21), stylize(f"\nPlease enter {name}'s level between {next_level} and 20: ", info), 0, -next_level)
                 current_character.set_level(new_level)
                 increase_to_level(current_character, starting_level)
             case "quit":
                 break
             case _:
                 # if unexpected value is entered, prompts the user to try again
-                print("Please enter a number from the list provided")
+                print(stylize("Please enter a number from the list provided", error))
                 continue
         # pretty-prints character data
         pp.pprint(current_character.get_character())

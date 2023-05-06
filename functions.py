@@ -126,7 +126,7 @@ def create_character():
 def get_dice():
     die_count = input_loop(range(1, 1001), stylize("\nHow many die would you like to roll? (max 1000) ", info))
         
-    die_type = input_loop(range(2, 1002), stylize("\nHow many sides does the dice have? (min 2, max 1000) ", info), 0, -2)
+    die_type = input_loop(range(2, 1001), stylize("\nHow many sides does the dice have? (min 2, max 1000) ", info), 0, -2)
     
     while True:
         # Advantage is only used in cases of rolling 2d20
