@@ -25,10 +25,10 @@ def print_list(name, attribute, list_name,  offset = 1, range_start = 0):
     for i in range(range_start, len(list_name)):
         print(stylize(f"{i+offset}. {list_name[i]}", options))
 
-def input_loop(list_name, prompt = "\n", range_start = 0, offset = -1):
-    index = check_input_within_given_range(input(prompt), offset, range(range_start, len(list_name)))
+def input_loop(list_name, prompt = "\n", range_start = 0, index_correction = -1):
+    index = check_input_within_given_range(input(prompt), index_correction, range(range_start, len(list_name)))
     while index == "loop":
-        index = check_input_within_given_range(input(prompt), offset, range(range_start, len(list_name)))
+        index = check_input_within_given_range(input(prompt), index_correction, range(range_start, len(list_name)))
     return list_name[index]
 
 def select_race(name):
@@ -48,7 +48,6 @@ def select_class(name):
     return input_loop(class_list)
 
 
-# This is broken. needs fixing
 def select_subclass(name, level, character_class):
     # subclass_dictionary[character_class][0] is the level a class' subclass is unlocked
     if level < subclass_dictionary[character_class][0]:
@@ -62,9 +61,7 @@ def select_subclass(name, level, character_class):
 
 def increase_to_level(current_character, starting_level):
     # Checks user input is within the available list
-    hp_choice = check_input_within_given_range(input(stylize(f"How would you like to set a max HP?", info) + stylize("\n1. Roll\n2. Average\n", options)), 0, [1, 2])
-    while hp_choice == "loop":
-        hp_choice = check_input_within_given_range(input(stylize(f"How would you like to set a max HP?", info) + stylize("\n1. Roll\n2. Average", options)), 0, [1, 2])
+    hp_choice = input_loop([1,2], stylize(f"How would you like to set a max HP?", info) + stylize("\n1. Roll\n2. Average\n", options))
     level_counter = starting_level + 1
 
     # These two steps are kinda combined into one awkwardly. 
@@ -72,10 +69,7 @@ def increase_to_level(current_character, starting_level):
     # This may affect the hp gained
     while level_counter <= current_character.get_level():
         if level_counter % 4 == 0:
-            asi = check_input_within_given_range(input(stylize("\nWould you like:", info) + stylize(" \n1. A Feat\n2. An Ability Score Increase?", options)), 0, [1,2])
-            # If input is outside of range or a ValueError, tries again
-            while asi == "loop":
-                asi = check_input_within_given_range(input(stylize("\nWould you like:", info) + stylize(" \n1. A Feat\n2. An Ability Score Increase?", options)), 0, [1,2])
+            asi = input_loop([1,2], stylize("\nWould you like:", info) + stylize(" \n1. A Feat\n2. An Ability Score Increase?", options))
             if asi == 2:
                 current_character.assign_stats(current_character.get_stats(), 2, 20)
             else:
@@ -102,10 +96,7 @@ def create_character():
     age = input(stylize(f"\nPlease enter {name}'s age: ", info))
 
     # Level
-    level = check_input_within_given_range(input(stylize(f"\nPlease enter {name}'s level between 1 and 20: ", info)), 0, range(1, 21))
-    # If input is outside of range or a ValueError, tries again
-    while level == "loop":
-        level = check_input_within_given_range(input(stylize(f"\nPlease enter {name}'s level between 1 and 20: ", info)), 0, range(1, 21))
+    level = input_loop(range(1,21), stylize(f"\nPlease enter {name}'s level between 1 and 20: ", info))
     
     # Class
     character_class = select_class(name)
@@ -123,9 +114,7 @@ def create_character():
     for i in range(3):
         print(stylize(f"{i+1} {stat_options[i]}", options))
 
-    stat_choice = check_input_within_given_range(input("\n"), 0, range(1,4))
-    while stat_choice == "loop":
-        stat_choice = check_input_within_given_range(input("\n"), 0, range(1,4))
+    stat_choice = input_loop(range(1,4))
 
     current_character.create_new_stats(stat_choice)
 
@@ -135,13 +124,9 @@ def create_character():
     return current_character
 
 def get_dice():
-    die_count = check_input_within_given_range(input(stylize("\nHow many die would you like to roll? (max 1000) ", info)), 0, range(1, 1001)) 
-    while die_count == "loop":
-        die_count = check_input_within_given_range(input(stylize("\nHow many die would you like to roll? (max 1000) ", info)), 0, range(1, 1001))
+    die_count = input_loop(range(1, 1001), stylize("\nHow many die would you like to roll? (max 1000) ", info))
         
-    die_type = check_input_within_given_range(input(stylize("\nHow many sides does the dice have? (min 2, max 1000) ", info)), 0, range(2, 1001))
-    while die_type == "loop":
-        die_type = check_input_within_given_range(input(stylize("\nHow many sides does the dice have? (min 2, max 1000) ", info)), 0, range(2, 1001))
+    die_type = input_loop(range(2, 1002), stylize("\nHow many sides does the dice have? (min 2, max 1000) ", info), 0, -2)
     
     while True:
         # Advantage is only used in cases of rolling 2d20
