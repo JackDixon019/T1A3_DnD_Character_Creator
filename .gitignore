@@ -1,4 +1,5 @@
-character-venv/
-__pycache__
+character-venv/*
+/__pycache__/
 .pytest_cache
-./characters/\*
+characters/
+/spot_test.py
