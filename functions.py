@@ -2,7 +2,7 @@ from character import Character
 from libraries import race_list, background_list, class_list, subclass_dictionary, stat_options
 from dice_roller import roll_die
 import colored
-from colored import fg, bg, attr, stylize
+from colored import stylize
 
 info = colored.fg("green")
 options = colored.fg(218)

@@ -1,5 +1,12 @@
 from random import randint
 from libraries import default_stats
+import colored
+from colored import stylize
+
+info = colored.fg("green")
+options = colored.fg(218)
+error = colored.fg("red")
+variable = colored.fg("yellow")
 
 
 # Takes number of dice to roll, the sides of the dice, and if the user has advantage
@@ -28,19 +35,19 @@ def assign_score_to_stat(available_scores):
     new_stats = {}
     # makes a list of stats available
     available_stats = list(default_stats.keys())
-    print("\nYour available rolls are:\n")
+    print(stylize("\nYour available rolls are:\n", info))
     for i in available_scores:
         print(i)
     # While there are values in the list of stats available to edit:
     while available_stats != []:
         for score in available_scores:
-            print(f"\nThe next score to assign is: {score}\n")
-            print(f"The available stats to assign a score to are:")
+            print(stylize(f"\nThe next score to assign is:", info) + stylize(f"{score}\n", variable))
+            print(stylize(f"The available stats to assign a score to are:", info))
             for stat in available_stats:
-                print(stat)
+                print(stylize(f'{stat}', options))
             while True:
                 # allows the user to input a value.
-                chosen_stat = input(f"Please enter a stat you would like to assign the score {score}:\n").upper()
+                chosen_stat = input(stylize(f"Please enter a stat you would like to assign the score", info) + stylize(f" {score}:\n")).upper()
                 match chosen_stat:
                     # For each stat, if user input.upper() matches a stat
                     case "STR":
@@ -71,5 +78,5 @@ def assign_score_to_stat(available_scores):
                         available_stats.pop(available_stats.index("CHA"))
                         break
                     case _:
-                        print("Sorry, that is not recognised as a stat. Please try again")
+                        print(stylize("Sorry, that is not recognised as a stat. Please try again", error))
     return new_stats
