@@ -1,4 +1,3 @@
-from asyncore import loop
 import csv
 import pprint
 from os import listdir, remove
@@ -157,10 +156,10 @@ def edit_character(character_name):
                 # if unexpected value is entered, prompts the user to try again
                 print(stylize("Please enter a number from the list provided", error))
                 continue
-        # pretty-prints character data
-        pp.pprint(current_character.get_character())
-        # saves character
-        save_character(current_character)
+    # pretty-prints character data
+    pp.pprint(current_character.get_character())
+    # saves character
+    save_character(current_character)
 
 def delete_character(character_name):
     filepath = f'./characters/{character_name}'
