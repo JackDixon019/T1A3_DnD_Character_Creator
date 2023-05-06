@@ -1,6 +1,6 @@
 character-venv/
 /__pycache__/
 .pytest_cache
-characters/
+characters/*
 /spot_test.py
 .DS_Store
