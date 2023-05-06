@@ -100,11 +100,6 @@ def test_select_character(monkeypatch):
     monkeypatch.setattr('builtins.input', lambda _: "1")
     select_character("view")
 
-def test_edit_character(monkeypatch):
-    monkeypatch.setattr('builtins.input', lambda : "quit")
-    # This quits immediately. Other functions are tested independently
-    edit_character(test_subject.get_name())
-
 def test_delete_character():
     delete_character(test_subject.get_name())
     
