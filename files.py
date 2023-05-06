@@ -3,7 +3,7 @@ import csv
 import pprint
 from os import listdir, remove
 
-from functions import input_loop, select_background, select_class, select_race, select_subclass, increase_to_level
+from functions import input_loop, select_background, select_class, select_race, select_subclass, increase_to_level, create_character
 from character import Character
 import colored
 from colored import stylize
@@ -20,6 +20,11 @@ pp = pprint.PrettyPrinter(sort_dicts=False)
 def select_character(verb):
     # Creates a list of files in the directory
     characters_list = listdir('./characters/')
+    if characters_list == []:
+        print(stylize("\nNo characters found. Please create a character first.", error))
+        current_character = create_character()
+        save_character(current_character)
+        return current_character.get_name()
     # {verb} contextually changes based on why the user is selecting a character (delete, view, edit etc.)
     print(stylize(f"\nAvailable characters to {verb} are:\n", info))
     # prints the name of each file in a numbered list

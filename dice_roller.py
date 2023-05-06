@@ -41,7 +41,7 @@ def assign_score_to_stat(available_scores):
     # While there are values in the list of stats available to edit:
     while available_stats != []:
         for score in available_scores:
-            print(stylize(f"\nThe next score to assign is:", info) + stylize(f"{score}\n", variable))
+            print(stylize(f"\nThe next score to assign is: ", info) + stylize(f"{score}\n", variable))
             print(stylize(f"The available stats to assign a score to are:", info))
             for stat in available_stats:
                 print(stylize(f'{stat}', options))
