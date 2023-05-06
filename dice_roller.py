@@ -11,7 +11,6 @@ variable = colored.fg("yellow")
 
 # Takes number of dice to roll, the sides of the dice, and if the user has advantage
 def roll_die(number_of_die, dice_to_roll, advantage):
-    print(dice_to_roll)
     rolls = []
     for i in range(number_of_die):
         # "rolls" a pseudorandom integer between 1 and the number of sides on the die --> simulating a d6
@@ -38,7 +37,7 @@ def assign_score_to_stat(available_scores):
     available_stats = list(default_stats.keys())
     print(stylize("\nYour available rolls are:\n", info))
     for i in available_scores:
-        print(i)
+        print(stylize(i, variable))
     # While there are values in the list of stats available to edit:
     while available_stats != []:
         for score in available_scores:
@@ -48,7 +47,7 @@ def assign_score_to_stat(available_scores):
                 print(stylize(f'{stat}', options))
             while True:
                 # allows the user to input a value.
-                chosen_stat = input(stylize(f"Please enter a stat you would like to assign the score", info) + stylize(f" {score}:\n")).upper()
+                chosen_stat = input(stylize(f"Please enter a stat you would like to assign the score", info) + stylize(f" {score}:\n", variable)).upper()
                 match chosen_stat:
                     # For each stat, if user input.upper() matches a stat
                     case "STR":

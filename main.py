@@ -7,6 +7,7 @@ from colored import fg, bg, attr, stylize
 info = colored.fg("green")
 options = colored.fg(218)
 error = colored.fg("red")
+variable = colored.fg("yellow")
 
 # Main menu
 try:
@@ -29,7 +30,7 @@ try:
                 print("\n")
                 # Prints character values
                 for key in current_character.get_character():
-                    print(f"{key}: {current_character.get_character()[key]}")
+                    print(stylize(f"{key}: {current_character.get_character()[key]}", variable))
             case "2":
                 # View character
                 character_name = select_character("view")
@@ -49,7 +50,7 @@ try:
                 
             case "6":
                 # Quit
-                print("\nProgram now exiting")
+                print(stylize("\nProgram now exiting\n", error))
                 break
             case _:
                 print(stylize(f'\nInput not recognised\nPlease enter a number from the list provided', error))

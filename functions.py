@@ -61,7 +61,7 @@ def select_subclass(name, level, character_class):
 
 def increase_to_level(current_character, starting_level):
     # Checks user input is within the available list
-    hp_choice = input_loop([1,2], stylize(f"How would you like to set a max HP?", info) + stylize("\n1. Roll\n2. Average\n", options))
+    hp_choice = input_loop([1,2], stylize(f"\nHow would you like to set a max HP?", info) + stylize("\n1. Roll\n2. Average\n", options))
     level_counter = starting_level + 1
 
     # These two steps are kinda combined into one awkwardly. 

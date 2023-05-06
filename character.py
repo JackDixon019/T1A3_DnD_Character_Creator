@@ -88,9 +88,9 @@ class Character():
 
     # Assigns values from a dictionary of ("stat" : score) pairs
     def set_stats(self, new_stats):
-        print(f"\n{self._name}'s stats are:")
+        print(stylize(f"\n{self._name}'s stats are:", variable))
         for stat in new_stats:
-            print(f"{stat}: {new_stats[stat]}")
+            print(stylize(f"{stat}: {new_stats[stat]}", variable))
         self._str = new_stats["STR"]
         self._dex = new_stats["DEX"]
         self._con = new_stats["CON"]
@@ -122,7 +122,8 @@ class Character():
                 # lists each stat and value in the default_stats dicionary
                 for stat in new_stats:
                     print(stylize(f"{stat}: {new_stats[stat]}", options))
-                stat_choice = input(stylize("\nWhich stat would you like to allocate points to?\n", info)).upper()
+                print(stylize("\nWhich stat would you like to allocate points to?\n", info))
+                stat_choice = input("\n").upper()
 
                 # Match case checks for if the stat chosen is in the list of stats and the stat chosen is less than max_stat
                 if stat_choice in list(new_stats) and new_stats[stat_choice] < max_stat:
