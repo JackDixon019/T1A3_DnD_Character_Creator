@@ -48,7 +48,8 @@ def assign_score_to_stat(available_scores):
                 print(stylize(f'{stat}', options))
             while True:
                 # allows the user to input a value.
-                chosen_stat = input(stylize(f"Please enter a stat you would like to assign the score", info) + stylize(f" {score}:\n", variable)).upper()
+                chosen_stat = input(stylize(f"Please enter a stat you would like to assign the score", info) + 
+                                    stylize(f" {score}:\n", variable)).upper()
                 match chosen_stat:
                     # For each stat, if user input.upper() matches a stat
                     case "STR":

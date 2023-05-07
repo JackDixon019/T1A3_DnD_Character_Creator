@@ -165,6 +165,7 @@ def delete_character(character_name):
     filepath = f'./characters/{character_name}'
     try:
         remove(filepath)
+        print(stylize(f'\n{character_name}', variable) + stylize(' deleted', info))
     except FileNotFoundError as e:
         print("File already removed.")
     

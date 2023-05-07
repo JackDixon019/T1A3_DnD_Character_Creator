@@ -4,6 +4,9 @@
 ### <u>Source Control Repository</u>
 [Link to Github](https://github.com/JackDixon019/T1A3_DnD_Character_Creator)
 
+### <u>Presentation</u>
+[Link to presentation](https://youtu.be/fO7vDJvicT4)
+
 ### <u>Software Development Plan</u>
 DnD 5e Character Creator is a CLI tool to assist users in creating, saving, and editing character-sheets for the tabletop RPG Dungeons and Dragons 5th edition. This tool is aimed at people familiar with DnD, and is at present *technically* incomplete. 
 
