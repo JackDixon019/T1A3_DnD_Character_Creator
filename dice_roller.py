@@ -17,7 +17,8 @@ def roll_die(number_of_die, dice_to_roll, advantage):
         roll = randint(1,dice_to_roll)
         # Stores roled value in list
         rolls.append(roll)
-    print(rolls)
+    print(stylize("\nDice rolled:", info))
+    print(stylize(rolls, variable))
     if advantage == 1:
         # When player has advantage, removes lowest value rolled
         rolls.pop(rolls.index(min(rolls)))

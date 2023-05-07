@@ -46,7 +46,7 @@ try:
                 delete_character(character_name)
             case "5":
                 # Roll dice
-                print(get_dice())
+                print(stylize('\nTotal: ', info) + stylize(get_dice(), variable))
                 
             case "6":
                 # Quit
@@ -59,5 +59,5 @@ try:
 except Exception as e:
     print(e)
     print(stylize("Something went wrong :(", error))
-    
 
+    

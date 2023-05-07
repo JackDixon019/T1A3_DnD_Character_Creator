@@ -21,11 +21,13 @@ def check_input_within_given_range(user_input, index_correction, expected_range)
             return "loop"
 
 def print_list(name, attribute, list_name,  offset = 1, range_start = 0):
+    # Prints all items in a list
     print(stylize(f"\nPlease select {name}'s {attribute} from the following: ", info))
     for i in range(range_start, len(list_name)):
         print(stylize(f"{i+offset}. {list_name[i]}", options))
 
 def input_loop(list_name, prompt = "\n", range_start = 0, index_correction = -1):
+    # Loops while input is NOT within the given range
     index = check_input_within_given_range(input(prompt), index_correction, range(range_start, len(list_name)))
     while index == "loop":
         index = check_input_within_given_range(input(prompt), index_correction, range(range_start, len(list_name)))
@@ -36,7 +38,6 @@ def select_race(name):
     print_list(name, "race", race_list)
     return input_loop(race_list)
 
-
 def select_background(name):
     # Lists available options, receives user input, checks user input, returns corresponding value
     print_list(name, "background", background_list)
@@ -46,7 +47,6 @@ def select_class(name):
     # Lists available options
     print_list(name, "class", class_list)
     return input_loop(class_list)
-
 
 def select_subclass(name, level, character_class):
     # subclass_dictionary[character_class][0] is the level a class' subclass is unlocked
@@ -69,7 +69,7 @@ def increase_to_level(current_character, starting_level):
     # This may affect the hp gained
     while level_counter <= current_character.get_level():
         if level_counter % 4 == 0:
-            asi = input_loop([1,2], stylize("\nWould you like:", info) + stylize(" \n1. A Feat\n2. An Ability Score Increase?", options))
+            asi = input_loop([1,2], stylize("\nWould you like:", info) + stylize(" \n1. A Feat\n2. An Ability Score Increase?\n", options))
             if asi == 2:
                 current_character.assign_stats(current_character.get_stats(), 2, 20)
             else:
@@ -101,7 +101,6 @@ def create_character():
     # Class
     character_class = select_class(name)
 
-
     # Subclass
     # Checks whether character has a subclass unlocked (unlocks at varying levels per class)
     subclass = select_subclass(name, level, character_class)
@@ -112,7 +111,7 @@ def create_character():
     # Stats
     print(stylize(f"\nHow would you like to determine {name}'s base stats?", info))
     for i in range(3):
-        print(stylize(f"{i+1} {stat_options[i]}", options))
+        print(stylize(f"{i+1}. {stat_options[i]}", options))
 
     stat_choice = input_loop(range(1,4))
 
@@ -131,7 +130,9 @@ def get_dice():
     while True:
         # Advantage is only used in cases of rolling 2d20
         if die_count == 2 and die_type == 20:
-            advantage = check_input_within_given_range(input(stylize("Do you have advantage?", info)+ stylize("\n1. No\n2. I have advantage\n3. I have disadvantage :(\n", options)), 0, range(1,4))
+            advantage = check_input_within_given_range(input(stylize("Do you have advantage?", info) + 
+                                                             stylize("\n1. No\n2. I have advantage\n3. I have disadvantage :(\n", options)),
+                                                             0, range(1,4))
             match advantage:
                 case 1:
                     advantage = 0

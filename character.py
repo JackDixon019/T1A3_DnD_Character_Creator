@@ -12,7 +12,10 @@ variable = colored.fg("yellow")
 
 class Character():
     # Defines the characteristics of a character
-    def __init__(self, name, race, background, alignment, age, character_class, character_subclass, level, str, dex, con, int, wis, cha, max_hp):
+    def __init__(self, name, race, background, 
+                 alignment, age, character_class, 
+                 character_subclass, level, str, 
+                 dex, con, int, wis, cha, max_hp):
         self._name = name
         self._race = race
         self._background = background
@@ -110,7 +113,9 @@ class Character():
         return stats
     
     def assign_stats(self, stats, points_to_assign, max_stat):
+        # Creates new stats dictionary
         new_stats = {}
+        # Copies values from stats parameter
         for stat in stats:
             new_stats[stat] = stats[stat]
         total = 0
@@ -118,18 +123,22 @@ class Character():
         while True:
             # Checks total points allocated meets the limit
             if total < points_to_assign:
-                print(stylize(f"\nYou have", info) + stylize(f" {points_to_assign-total}", variable) + stylize(" points remaining to allocate between each stat.\nEach stat can have a maximum of ", info) + stylize(f"{max_stat}", variable) + stylize(f" before bonuses are applied.\nCurrently, {self._name}'s stats are:", info))
+                print(stylize(f"\nYou have", info) + stylize(f" {points_to_assign-total}", variable) + 
+                      stylize(" points remaining to allocate between each stat.\nEach stat can have a maximum of ", info) + 
+                      stylize(f"{max_stat}", variable) + stylize(f" before bonuses are applied.\nCurrently, {self._name}'s stats are:", info))
                 # lists each stat and value in the default_stats dicionary
                 for stat in new_stats:
                     print(stylize(f"{stat}: {new_stats[stat]}", options))
                 print(stylize("\nWhich stat would you like to allocate points to?\n", info))
                 stat_choice = input("\n").upper()
 
-                # Match case checks for if the stat chosen is in the list of stats and the stat chosen is less than max_stat
+                # Checks for if the stat chosen is in the list of stats and the stat chosen is less than max_stat
                 if stat_choice in list(new_stats) and new_stats[stat_choice] < max_stat:
                     try:
                         # Gets the number of points the user wants to add
-                        point_allocation = int(input(stylize(f"\n{stat_choice} has ", info) + stylize(f"{min(max_stat - new_stats[stat_choice], points_to_assign-total)}", variable) + stylize(f" available points remaining.\nHow many would you like to add?\n", info)))
+                        point_allocation = int(input(stylize(f"\n{stat_choice} has ", info) + 
+                                                     stylize(f"{min(max_stat - new_stats[stat_choice], points_to_assign-total)}", variable) + 
+                                                     stylize(f" available points remaining.\nHow many would you like to add?\n", info)))
                         # Checks the user's desired addition is legal (<max_stat total)
                         if point_allocation <= max_stat - new_stats[stat_choice]:
                             # Adds additional points to stat and to total points tally
@@ -141,11 +150,13 @@ class Character():
                     # Will catch if user enters non-integer characters and re-loop
                     except ValueError:
                         print(stylize("Please enter a number only", error))
-                        
+
+                # Catches if stat is in list, but the value > max-limit
                 elif stat_choice in list(new_stats):
                     print(stylize("\n\nSorry, that stat is already at the maximum. Please select another.", error))
+                
+                # If chosen stat is not in the list, prompts the user to try again
                 else:
-                    # If chosen stat is not in the list, prompts the user to try again
                     print(stylize("\n\nPlease enter an available stat", error))
 
 
@@ -162,7 +173,8 @@ class Character():
                 for stat in new_stats:
                     print(stylize(f"{stat}: {new_stats[stat]}", info))
                 while True:
-                    retry = input(stylize("\nAre you happy with this stat distribution?", info) + stylize("\n1. Yes, please save these stats.\n2. No, I'd like to try again.\n", options))
+                    retry = input(stylize("\nAre you happy with this stat distribution?", info) + 
+                                  stylize("\n1. Yes, please save these stats.\n2. No, I'd like to try again.\n", options))
                     # If the user chooses not to reallocate, saves the values to the Character object
                     if retry == "1":
                         self.set_stats(new_stats)
@@ -177,66 +189,78 @@ class Character():
                     else: 
                         print(stylize("\n\nPlease select from either option 1 or option 2", error))
 
-
-
     # Setting stats done in 3 ways: point buy, roll 4d6 choose highest 3, and roll 3d6
     # For context, d6 is a 6-sided die. Highest score total is 20 (outside of magic).
     def create_new_stats(self, method):
-        while True:
-            # User has selected "point-buy"
-            if method == 1:
-                self.assign_stats(default_stats, 27, 15)
-                return
-            
-            # User has selected roll "4d6 pick 3"
-            elif method == 2:
-                # In this case, we will simulate rolling 4 6-sided die and take the sum of the highest 3 rolls
-                available_scores = []
-                # For each stat
-                for x in range(6):
-                    # Rolls (4, 6-sided die, with "advantage") --> "advantage" removes lowest number from list of values
-                    rolls = roll_die(4,6,1)
-                    # Adds sum of rolls to available scores list
-                    available_scores.append(rolls)
-                # Sorts in descending order
-                available_scores.sort(reverse=True)
-                    
-                # assigns scores to stats
-                new_stats = assign_score_to_stat(available_scores)
-                # assigns attributes to object
-                self.set_stats(new_stats)
-                return
+        # User has selected "point-buy"
+        if method == 1:
+            self.assign_stats(default_stats, 27, 15)
+            return
+        
+        # User has selected roll "4d6 pick 3"
+        elif method == 2:
+            # In this case, we will simulate rolling 4 6-sided die and take the sum of the highest 3 rolls
+            available_scores = []
+            # For each stat
+            for x in range(6):
+                # Rolls (4, 6-sided die, with "advantage") --> "advantage" removes lowest number from list of values
+                rolls = roll_die(4,6,1)
+                # Adds sum of rolls to available scores list
+                available_scores.append(rolls)
+            # Sorts in descending order
+            available_scores.sort(reverse=True)
+                
+            # assigns scores to stats
+            new_stats = assign_score_to_stat(available_scores)
+            # assigns attributes to object
+            self.set_stats(new_stats)
+            return
 
+        elif method == 3:
+            # This is the same as the prior method, only with 3x 6-dided die instead of 4, and no die removed.
+            available_scores = []
+            # For each stat
+            for x in range(6):
+                # Rolls (3, 6-sided die, without "advantage")
+                available_scores.append(roll_die(3,6,0))
 
-            elif method == 3:
-                # This is the same as the prior method, only with 3x 6-dided die instead of 4, and no die removed.
-                available_scores = []
-                # For each stat
-                for x in range(6):
-                    # Rolls (3, 6-sided die, without "advantage")
-                    available_scores.append(roll_die(3,6,0))
+            # Sorts scores in descending order
+            available_scores.sort(reverse=True)
 
-                # Sorts scores in descending order
-                available_scores.sort(reverse=True)
-
-                # Assigns scores to stats and stats to object
-                new_stats = assign_score_to_stat(available_scores)
-                self.set_stats(new_stats)
-                return
+            # Assigns scores to stats and stats to object
+            new_stats = assign_score_to_stat(available_scores)
+            self.set_stats(new_stats)
+            return
 
     def set_max_hp(self, roll):
+        # modifier is the rounded-down value of (CON-10)/2
         modifier = floor((self._con - 10)/2)
+
+        # Hill Dwarves have +1hp/level
+        # I didn't actually make a Hill Dwarf race yet though... call it future-proofing
         if self._race == "Hill Dwarf":
             self._max_hp += 1
+        
+        # at level 1, max hp is calculated using the highest possible roll of a characters hit-die
+        # Normally default max_hp == 0, but if the character is a Hill Dwarf then it would be 1... call it future-proofing
         if self._max_hp <= 1:
             self._max_hp += modifier + subclass_dictionary[self._character_class][1]
             return
+        
+        # If player selected to roll for max hp, rolls the character's hit-die and adds to the CON modifier
         elif roll == 1:
             self._max_hp += modifier + roll_die(1, subclass_dictionary[self._character_class][1],0)
+        
+        # Otherwise, takes the (rounded-up) average roll of the character's hit-die
         else:
             self._max_hp += modifier + subclass_dictionary[self._character_class][1]/2 + 1
+        
+        # If the player has the subclass Draconic Bloodline, increases hp by 1
+        # This is applied AFTER the level-1 check, because Sorcerer subclass is chosen at level 2
         if self._character_subclass == "Draconic Bloodline":
             self._max_hp += 1
+        
+        # converts max_hp to an integer. Otherwise it would be a float thanks to the division earlier in the function
         self._max_hp = int(self._max_hp)
         return
     
