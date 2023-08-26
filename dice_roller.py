@@ -15,7 +15,7 @@ def roll_die(number_of_die, dice_to_roll, advantage):
     for _ in range(number_of_die):
         # "rolls" a pseudorandom integer between 1 and the number of sides on the die --> simulating a d6
         roll = randint(1,dice_to_roll)
-        # Stores roled value in list
+        # Stores rolled value in list
         rolls.append(roll)
     print(stylize("\nDice rolled:", info))
     print(stylize(rolls, variable))
